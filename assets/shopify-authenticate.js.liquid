@@ -1,0 +1,23 @@
+$(document).ready(function(){
+  $.ajax({url: "https://team.dropshiplifestyle.com/shopify-authenticate/search-contact-result.php?store_url={{ shop.url }}{% if settings.email_authentication != blank %}&email={{ settings.email_authentication }}{% else %}&email=user_email@placeholder.com{% endif %}&theme_version={{ theme.name }}", success: function(result){
+    //$("body").prepend(result);
+    console.log(result); 
+    if($(result).filter("#success").val() == "1") {
+      //alert("You are a user");
+      $(result).filter("script").insertAfter("#shopify-authenticate");    
+    }   
+    else {
+      $(result).filter("script").insertAfter("#shopify-authenticate");    
+      $("#Purchase-popup ").css("display","none");   
+      $("#exit-popup ").css("display","none");       
+      {% if request.design_mode %}
+         $("#shopify-authenticate-error").show();
+      	 $("body").css("overflow","hidden");
+      {% else %}
+           alert("This is a non-authenticated copy of the theme. Please buy the licensed copy."); 
+           $("#shopify-authenticate-error").show();
+           $("body").css("overflow","hidden");
+      {%- endif -%}
+    }
+  }});
+});
