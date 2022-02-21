@@ -1,0 +1,55 @@
+{% if settings.enable_cross_sell %}
+  {% for tag in product.tags %}
+	{% if tag == "cross-sell-1" %}
+      <div id="cross-sell-popup" class="clock-popup cross-sell-popup-wrapper cross-sell-popup-wrapper--hidden" data-backdrop="static" data-keyboard="false">
+       <div class="clock-popup-inner">
+         
+        <div class="item-added text-left" style="opacity:0;">{%- render 'icon-checkmark' -%} <span class="item-added-text"></span></div>
+        <button title="Close (Esc)" type="button" class="close-cross-sell close" onclick="document.getElementById('cross-sell-popup').style.display='none';document.getElementById('body-container').style.overflow='auto';">&times;</button>
+                        
+        <div id="cross-sell-heading">
+          <strong><p style="font-size:18px;margin-bottom:30px;margin-top:10px;">{{ settings.cross_sell_heading }}</p></strong>
+        </div>
+  
+           {% include 'condition-for-cross-sell' %} 
+           {% include 'cross-sell-popup' %} 
+            
+            {% if collection1 %}
+               {% capture index %}
+                       {{ 'now' | date: '%S' | times: collections.all.products.size | divided_by: 60 }}
+               {% endcapture %}
+                <ul id="product-grid" data-id="{{ section.id }}" class="grid grid--1-col negative-margin product-grid
+                {% if collection.products_count < 4 %} grid--{{ collection.products_count }}-col-tablet{% else %}
+            		{% if collection.products_count == 4 %} grid--4-col-desktop{% else %} grid--3-col-tablet grid--one-third-max grid--4-col-desktop grid--quarter-max{% endif %}
+                {% endif %}">
+                  {% for product in collections[collection1.handle].products %}
+                    {% if product.available and product.variants.size >= 1 %}
+                          <li class="grid__item">
+                            {% render 'product-card-grid-cross-sell-popup',
+                              product: product,
+                              show_secondary_image: section.settings.show_secondary_image,
+                              add_image_padding: section.settings.add_image_padding
+                            %}
+                          </li>
+                    {% endif %}
+                  {% endfor %} 
+                </ul>
+                <input type="hidden" id="check_collection_empty" value="1">
+             {% else %}
+                <input type="hidden" id="check_collection_empty" value="0">
+             {% endif %}
+         
+             <div class="cross-sell-bottom">
+              <div class="cart-notification__links">
+                <a type="button" href="{{ routes.cart_url }}" name="add" class="button button--secondary button--full-width">View Cart</a>
+                <form action="{{ routes.cart_url }}" method="post" id="cart-notification-form">
+                  <button class="button button--primary button--full-width" name="checkout">{{ 'sections.cart.checkout' | t }}</button>
+                </form>
+                <button type="button" class="link button-label" onclick="document.getElementById('cross-sell-popup').style.display='none'">{{ 'general.continue_shopping' | t }}</button>
+              </div>
+          	</div>
+         </div>
+      </div>
+	{% endif %}  
+  {% endfor %}
+{% endif %}

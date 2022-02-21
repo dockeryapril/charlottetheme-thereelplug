@@ -1,0 +1,184 @@
+<div id="Purchase-popup" class="clock-popup" data-backdrop="static" data-keyboard="false">
+  <div class="clock-popup-inner">
+    <button title="Close (Esc)" type="button" class="close" onclick="document.getElementById('Purchase-popup').style.display='none'">&times;</button>
+    <input type="checkbox" id="dont-show-again-purchase-popup" name="dont-show-again-purchase-popup" checked style="display:none;"/>
+    {% if settings.showlogopopup %}
+    	{% if settings.email_popuplogo != blank %}
+    		<img class="lazyload js"
+                           src="{{ settings.email_popuplogo | img_url: '720x' }}"
+                           data-src="{{ img_url }}"
+                           data-aspectratio="{{ section.settings.logo.aspect_ratio }}"
+                           data-sizes="auto"
+                           alt="{{ logo_alt | escape }}"
+                           style="max-width: 330px">
+    	{% else %}
+         	<img class="lazyload limn" src="{{'popuplogo.png' | asset_url}}" data-src="{{'popuplogo.png' | asset_url}}" data-widths="[540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048]" data-aspectratio="{{'popuplogo.png' | asset_url}}" data-sizes="auto" data-parent-fit="contain">
+    	{% endif %}
+    {% endif %}
+    
+    <h2 class="h2-email-popup" style="color: {{settings.entry_color_text}};">{{settings.entrypopup_heading}}</h2>
+    
+    <p class="ptag">{{settings.entrypopup_text}}</p>
+    
+    <div id="countdown-email"> 
+    	{% include 'popup_countdown' %}
+    </div>
+    {%- assign formId = 'Email_Popup_Contact' -%}
+    {%- form 'customer', id: formId, class: 'email_popup__newsletter newsletter-form' -%}
+              <input type="hidden" name="contact[tags]" value="email-popup">
+              <div class="newsletter-form__field-wrapper {% if form.errors %}input-group--error{% endif %}{%- if form.posted_successfully? -%}input-group--success{% endif %}">
+                <input
+                    id="Email-Popup--{{ section.id }}"
+                    type="email"
+                    name="contact[email]"
+                    class="field__input"
+                    value="{{ form.email }}"
+                    aria-required="true"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    autocomplete="email"
+                    {% if form.errors %}
+                      autofocus
+                      aria-invalid="true"
+                      aria-describedby="{{formId}}-error"
+                    {% elsif form.posted_successfully? %}
+                      aria-describedby="{{formId}}-success"
+                    {% endif %}
+                    placeholder="{{ 'newsletter.label' | t }}"
+                    required
+                  >
+                  <label class="field__label" for="Email-Popup--{{ section.id }}">
+                    {{ 'newsletter.label' | t }}
+                  </label>
+                  <button type="submit" class="button button--full-width" name="commit" id="Subscribe_Email" aria-label="{{ 'newsletter.button_label' | t }}">
+                    {{settings.entrypopup_button}}
+                  </button>
+                  <div class="deals">
+                    {{settings.entrypopup_bottomtext}}
+                  </div>	
+                {%- if form.errors -%}
+                  <small class="newsletter-form__message form__message" id="{{formId}}-error">{% render 'icon-error' %}{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}</small>
+                {%- endif -%}
+              </div>
+              {%- if form.posted_successfully? -%}
+                <h3 class="newsletter-form__message newsletter-form__message--success form__message" id="{{formId}}-success" tabindex="-1" autofocus>{% render 'icon-success' %}{{ 'newsletter.success' | t }}</h3>
+              	<script>
+                  $(".h2-email-popup").html("<font style='color:#414141;font-size: 30px;line-height: 1;'>Enter promo code <span style='color: {{settings.entry_color_text}};font-weight: bold;border-bottom: 2px dotted;display: block;width: max-content;margin: auto;'>{{settings.email_discountcode}}</span> at the CHECKOUT</font>");
+                  $(".ptag").hide();
+                </script> 
+    			<script>
+                  var eop=setTimeout(openPopUp,1000);
+                  function openPopUp() {
+                   $("#Purchase-popup").css("visibility","visible");
+                   $("#Purchase-popup").css("opacity","1");
+                  }
+                </script>		
+    			{%- endif -%}
+            {%- endform -%}
+    
+  </div>
+</div>
+<script>
+	$(document).ready(function(){
+    $('#Subscribe_Email').attr('disabled',true);
+    $('#Email-Popup--{{ section.id }}').keyup(function(){
+        if($(this).val().length !=0)
+            $('#Subscribe_Email').attr('disabled', false);            
+        else
+            $('#Subscribe_Email').attr('disabled',true);
+    })
+});
+</script>
+<script>
+  $('#countdown-email').ClassyCountdown({
+      end: $.now() + {{settings.entry_timer}} // end time
+  });
+    
+  if ($('#countdown-email.ClassyCountdown-hours.countdown_num:contains("0")').length > 0 && $('#countdown-email.ClassyCountdown-minutes.countdown_num:contains("0")').length > 0 && $('#countdown-email.ClassyCountdown-seconds.countdown_num:contains("0")').length > 0)  {
+       $("#countdown-email").html("<h3><strong>Countdown is expired!</strong></h3>");
+  }
+</script>
+
+<script>
+  var mop=setTimeout(openPopUp,{{settings.newsletter_popup_seconds}});
+  function openPopUp() {
+   $("#Purchase-popup").css("visibility","visible");
+   $("#Purchase-popup").css("opacity","1");
+   
+  }
+</script>
+
+ <script>
+    //local storage
+
+    //store local storage in a variable
+    var showStatusStorage = sessionStorage;
+    //test to see if local storage is already set on page load
+    if (!showStatusStorage.getItem("showStatus")) {
+      showStatusStorage.setItem("showStatus", "ShowPurchasePopup");
+    }
+    updateLocalStorageTextField();
+
+    //show the alert IF the user hasn't expressly checked the 'dont show again' checkbox on a previous visit
+    if (showStatusStorage.getItem("showStatus") === "ShowPurchasePopup") {
+       $("#Purchase-popup").removeClass("hide");
+    }
+    if (showStatusStorage.getItem("showStatus") === "DontShowPurchasePopup") {
+       $("#Purchase-popup").addClass("hide");
+       $("#shopify-section-header").addClass("purchase-disabled");
+       $("body.template-product").addClass("purchase-disabled"); 
+    }
+   
+    function closeAlert() {
+      $(this).closest("#Purchase-popup").addClass("hide");
+      if ($("#dont-show-again-purchase-popup").is(":checked")) {
+        showStatusStorage.setItem("showStatus", "DontShowPurchasePopup");
+      }
+      updateLocalStorageTextField();
+    }
+   
+   function openAlert() {
+      $(this).closest("#Purchase-popup").removeClass("hide");
+      if ($("#dont-show-again-purchase-popup").prop('checked', false)) {
+        showStatusStorage.setItem("showStatus", "ShowPurchasePopup");
+      }
+      updateLocalStorageTextField();
+    }
+   
+    if ($(".shopify-challenge__container")[0]){
+        $("#Purchase-popup").addClass("hide");
+    } 
+    if(window.location.href.indexOf("?contact%5Btags%5D=newsletter&form_type=customer") > -1){
+      if ($(".input-group--error")[0]){
+    	$(".newsletter-form__field-wrapper").removeClass("hide");
+        $(".ptag").removeClass("hide");
+      }
+      else{
+        $(".newsletter-form__field-wrapper ").addClass("hide");
+        $(".ptag").addClass("hide");
+        $(".h2-email-popup").html("You Have Already Subscribed.");
+      }
+    }
+   
+   
+    $("#Purchase-popup .close").on("click", closeAlert);
+    $('#Purchase-popup .close').click(function(){
+        $("body").css("overflow","auto");
+    });
+   
+    $(".shopify-challenge__button").on("click", openAlert);
+   
+    function updateLocalStorageTextField() {
+      $(".local-storage-value").text(showStatusStorage.getItem("showStatus"));
+    }
+
+    //clear after 12hours
+       //setTimeout(function(){
+           //showStatusStorage.clear();
+      //}, 43200000);
+  </script>
+
+<style>
+
+</style>
+ 

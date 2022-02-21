@@ -1,0 +1,85 @@
+{% if section.settings.notify_me_form %}   
+  <div class="notify_form notify-form-{{ product.id }}" id="notify-form-{{ product.id }}" {% if product.available %}style="display:none"{% endif %}>
+    
+    <p class="notify-text"><b>{{section.settings.notify_text}}:</b></p>
+    {%- assign formId = 'ProductNotify' -%}
+    {% form 'contact', id: formId, class: 'contact-form form-single-field newsletter-form' %}
+      <div class="input-group field {% if form.errors %} input-group--error{% endif %}{%- if form.posted_successfully? -%}input-group--success{% endif %}">       
+        <input id="Product-Notify--{{ section.id }}"
+          type="email"
+          name="contact[email]"
+          class="field__input input-group__field{% if form.errors %} input--error{% endif %}"
+          value="{{ customer.email }}"
+          placeholder="{{ section.settings.notify_email_placeholder }}"
+          aria-label="{{ section.settings.notify_email_placeholder }}"
+          aria-required="true"
+          autocorrect="off"
+          autocapitalize="off"
+          {% if form.errors %}
+            aria-invalid="true"
+            aria-describedby="{{ formId }}-email-error"
+            data-form-status
+          {% endif %}
+          required>
+         <input type="hidden" name="contact[body]" class="notify_form_message" data-body="Please notify me when {{ product.title }} becomes available - {{ shop.url | append: product.url }}" value="Please notify me when {{ product.title }} becomes available - {{ shop.url | append: product.url }}" />
+        
+        <label class="field__label" for="Product-Notify--{{ section.id }}">
+              {{ section.settings.notify_email_placeholder }}
+         </label>
+        <span class="input-group__btn">
+          <button type="submit" class="button" name="commit" id="Notify_Btn" value="{{section.settings.notify_button}}" >
+            <span>{{section.settings.notify_button}}</span>
+          </button>
+        </span>
+      </div>
+      	{%- if form.posted_successfully? -%}
+    		<h3 class="newsletter-form__message newsletter-form__message--success form__message" id="{{formId}}-success" tabindex="-1" autofocus>{% render 'icon-success' %}Thanks! We will notify you when this product becomes available!</h3>
+      		<script>
+                $("#ProductNotify").addClass("newsletter-form");
+            </script>
+    	{%- endif -%}	
+      	{%- if form.errors -%}
+        	<small class="newsletter-form__message form__message" id="{{formId}}-error">{% render 'icon-error' %}{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}</small>
+      		<script>
+                $("#ProductNotify").removeClass("newsletter-form");
+            </script> 
+    	{%- endif -%}
+    {% endform %}
+    
+  </div>
+{% endif %}
+
+<style>
+.notify_form .form-single-field {
+    margin: 0 auto 30px;
+    max-width: none;
+}
+  .notlf, .flash--total-sold{display:none}
+input#Notify_Contact_product-template-email {
+  width: 100%!important;
+  margin: 10px 0px;
+    float: left;
+    padding: 13px
+}
+  .notify_form .input-group{
+  display:flex;
+  margin-bottom:5px;
+  }
+  .notify_form button#Notify_Btn{
+    margin: 0px 0px;
+    padding: 10px;
+    width: auto;
+  }
+  .container-fluid.fix-cart.cart-bar {
+    display: none;
+}
+  p.notify-text {
+    margin-bottom: 10px;
+}
+   
+</style>
+
+{% if section.settings.notify_me_form %}  
+{% unless product.available %} 
+{% endunless %}
+{% endif %}

@@ -1,0 +1,416 @@
+<script>
+  function crossSellFunction(){
+    $('.product-form__submit').on('click', function(e){
+      $("cart-notification").remove();
+    });
+  };
+</script>  
+<script>
+ function custom_addcart(that){
+  var quantity = 1, variant_id = $(that).attr('data-variant');
+   data = {
+    quantity: quantity,
+    id: variant_id,
+   };
+  var userfor = $(that).html();
+   $.ajax({
+    type: 'POST',
+    url: '/cart/add.js',
+    dataType: 'json',
+    data: data,
+	beforeSend: function() {
+	 $(that).attr("disabled",true);
+	 $(that).html('<span id="AddToCartText">Adding...</span>');
+	},
+    success: function (data){
+    	$.ajax({
+         type: 'GET',
+         dataType: 'json',
+         url: '/cart.json',
+         success: function(cart){
+          $(that).removeAttr("disabled");
+     	  $(that).attr('disabled', 'disabled' ).find('span#AddToCartText').html('<span id="AddToCartText">In Cart</span>');
+          $('.item-added').addClass('fadeInOut')
+          setTimeout(function(){
+                $('.item-added').removeClass('fadeInOut');
+          },4000);
+          $('.item-added-text').text('Item added to your cart'); 
+    		var item_count = cart['item_count'];
+			$(".cart-count-bubble span:first-child").text(item_count);
+          }
+         });
+      },
+    error: function (data){
+      	$.ajax({
+         type: 'GET',
+         dataType: 'json',
+         url: '/cart.json',
+         success: function(cart){
+           $(that).attr("disabled",true);
+	 	   $(that).html('<span id="AddToCartText">Out of Stock</span>');
+         }
+        });
+    },
+  }); 
+ };	
+</script>
+
+<script>
+  $(document).ready(function() {
+    setInterval(function() {
+      $('.product-form__submit_crosssell').click(function(e) {
+        $('#cross-sell-popup').css('visibility','visible');
+        $('#cross-sell-popup').css('display','block');
+        $('#cross-sell-popup').css('opacity','1');
+        $('#body-container').css('overflow','hidden'); 
+        $(window).scrollTop(0); 
+      });
+    },1000);  
+  });
+</script> 
+
+<script>
+	jQuery('.cart-notification__close').click(function(e){
+      $("#body-container").addCLass("slide-right");   
+    });
+</script>
+
+<script>
+      jQuery('button.close-cross-sell.close').click(function(e){  
+      $("#body-container").css("overflow","auto");   
+    });
+</script>
+
+<style>
+  /* Cross Sell */
+  div#cross-sell-popup .product-single-variants.no-js {
+    opacity:0!important;
+    cursor:auto!important;
+    display:block!important;
+  }
+  #cross-sell-popup .card__badge {
+    top: 0.7rem;
+    bottom: auto;
+  }
+   #cross-sell-popup .item-added .icon-checkmark {
+    color: rgb(var(--color-foreground));
+    margin-right: 1rem;
+    width: 1.3rem;
+ }
+  #cross-sell-popup .fadeInOut{
+  -webkit-animation: fadeInOut 4s;
+    animation: fadeInOut 4s;
+  }
+  #cross-sell-popup.product-form__variants{
+    width:100%;
+    display:block!important;
+  }
+  #cross-sell-popup.clock-popup {
+    position: fixed;
+    align-content: center;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    width:100%;
+    max-width:none!important;
+    z-index: 99999999;
+    padding:10px 20px;
+    overflow-y:auto;
+    visibility: hidden;
+    opacity: 0;
+  }
+  #cross-sell-popup .clock-popup-inner {
+    margin: 1.5em auto;
+    padding: 1.5em 2em 3em 2em;
+    background-color: {{ settings.entry_bgcolor }};
+    border-radius: 5px;
+    width:1000px;
+    position: relative;
+    transition: all .3s ease-in-out;
+    max-height: 600px;
+    overflow-y: scroll;
+  }
+  #cross-sell-popup .cross-sell-bottom {
+      border-top: 1px solid #ccc!important;
+      padding-top: 20px!important;
+      margin: 20px auto 0 auto!important;
+  }
+  #cross-sell-popup .cart-notification__links{
+    max-width: 200px;
+    margin: 0 auto 0 auto!important;
+  }
+  div#cross-sell-popup .grid {
+    padding: 0 15px 15px 15px!important;
+    justify-content: center;
+  }  
+  div#cross-sell-popup .product-single-variants {
+    width: 100%;    
+    appearance: auto;
+    -webkit-appearance: auto;
+    margin-top:10px;
+  }
+  div#cross-sell-popup .card-information__wrapper{
+    margin-top:10px;
+  }
+  .cross-sell-popup-wrapper{
+    display:block;
+  }
+  .cross-sell-popup-wrapper--hidden{
+    display:none;
+  }
+  .cross-sell-bottom button.cart-popup__dismiss-button{
+    letter-spacing: 0!important;
+    padding:0px;
+    white-space: normal;
+    font-size: 14px;
+    margin: 5px 0;
+    border:none;
+    outline:none!important;
+    background-color:transparent;
+    cursor:pointer;
+  }
+  #AddtoCart-Cross-Sell {
+    width: 100%!important;
+  }
+  #cross-sell-popup .button--full-width {
+    outline:none!important;
+    width: 100%;
+    margin: 10px auto!important;
+    padding: 10px!important;
+    white-space: normal!important;
+  }
+  #cross-sell-popup .card-information {
+    text-align: left;
+	}
+  h4.cross-sell-heading {
+      font-weight: 600;
+  }
+  #cross-sell-popup .clock-popup-inner h2{ 
+    color:{{ settings.cross_sell_popup_heading_font_color }}!important;
+    font-size:{{ settings.cross_sell_popup_heading_font_size }}px!important;
+  }
+  #cross-sell-popup .clock-popup-inner .ptag{
+    margin: 20px auto!important; 
+  }
+  #cross-sell-popup .clock-popup-inner .close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    transition: all 200ms;
+    font-size: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+    background-color: transparent;
+    border: none;
+    opacity:.2;
+    cursor:pointer;
+  }
+  #cross-sell-popup .price__sale dd.price__compare, #cross-sell-popup span.price-item.save-price {
+      display: none;
+  }
+  #cross-sell-popup .clock-popup-inner .close:hover {
+    opacity:.5;
+  }
+  #cross-sell-popup .newgrid {
+    width: 200px;
+    margin: 0 auto;
+	}
+  #cross-sell-popup .clock-popup-inner .content {
+    max-height: 30%;
+    overflow: auto;
+  }
+  #cross-sell-popup .h4.grid-view-item__title.product_title {
+    height: 40px;
+  }
+  div#related_popup_upsell .modal-dialog{
+    margin:0 auto;
+  }
+  div#related_popup_upsell .modal-dialog{
+    margin:0 auto;
+  }
+  .alert-success {
+    color: #fff;
+    background-color: {{settings.color_primary}};
+  }
+  .alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+  }
+  .related_popup_heading{
+    color:{{settings.related_popup_heading_font_color}};
+    font-size:{{settings.related_popup_heading_font_size}}px;
+    font-family:{{settings.related_popup_heading_font_family}} !important;  
+  }
+  .related_popup_text{
+    color:{{settings.related_popup_text_font_color}};
+    /*font-size:{{settings.related_popup_text_font_size}}px; */
+    font-size:18px;
+    font-family:{{settings.related_popup_text_font_family}} !important;
+    margin:0;
+  }
+  .r_view_cart_color{
+    font-weight:bold;
+    font-size:17px;
+  }
+  .r_continue_shoping_color{
+    color: #fff !important;
+  }
+  .r_checkout_color{
+    font-size:17px;
+    font-weight:bold;
+  }
+  @keyframes fadeInOut {
+    0% {
+        opacity: 0;
+    }
+    25% {
+       opacity: 1;
+    }
+    75% {
+       opacity: 1;
+    }
+    100% {
+       opacity: 0;
+    }
+}
+  img.addcartloader {
+    height: 19px;
+    width: 20px;
+  }
+  /*div#related_cart_sucsses_msg {
+      width: 74%;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      top: 40px !important;
+      position: fixed !important;
+      z-index:99999999;
+  } */
+  .btn {
+    text-transform: uppercase !important;
+  }
+  .btn.btn-default.r_continue_shoping_color{ 
+    /*position:absolute;left:10px;*/ 
+    float:left; 
+  }
+  .related_popup_footer a {
+    display: inline-block;
+    color: #fff;
+  }
+  .modal-footer.related_popup_footer form {
+    display: inline-block;
+  }
+  .modal-footer.related_popup_footer form input.r_checkout_color {
+    color: #fff;
+  }
+  .related_popup_text{
+    text-align:left !important;
+  }
+  .modal-backdrop.in{
+    opacity:0.7 !important; 
+    background:#000;
+  }
+  .modal-open { 
+    overflow: hidden !important;
+  }
+  .h4.grid-view-item__title.product_title.mobile-only {
+    display: none;
+  }
+  a.btn.btn-default.r_continue_shoping_color {
+    background: {{settings.color_secondary}}!important;
+    padding: 23px 25px;
+    line-height: 1;
+    font-size: 16px;
+    border: none;
+  }
+  a.btn.btn-default.r_view_cart_color {
+    color: black!important;
+    background: white!important;
+    font-weight: normal;
+    padding: 23px 30px;
+    line-height: 1;
+    font-size: 16px;
+    margin-right: 10px;
+  }
+  .r_checkout_color img.no-border.ratina-img.addIcon {
+    width: 21px;
+    position: relative;
+    top: -2px;
+  }
+  /* New css*/
+  a.grid-view-item__link.grid_set_box {
+    display: block;
+  }
+  .grid-view-item{
+    padding:10px;
+  }  
+  div#related_popup_upsell .modal-dialog .modal-content .modal-body .small--one-half .grid-view-item .h4.grid-view-item__title {
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 0;
+    min-height: 36px;
+    text-align: center;
+    margin: 26px auto;
+  }
+  select.related-popup-variant {
+    width: 100%;
+  }
+  .cs_addtocartbutton  {
+    width: 100%;
+    margin-top: 15px;
+    z-index: 2;
+    position: relative;
+  }
+  .modal-footer.related_popup_footer button.btn {
+    color: #fff;
+    font-size: 16px;
+    padding: 21px 28px;
+    line-height: 1;
+    border: none;
+  }
+  .modal .modal-footer{
+    padding:30px 28px; 
+    margin-top:15px;
+  }
+  .related_pupup_rendome_parent{
+    padding:0 9px 0 16px;
+    display:inline-block;
+  }
+  .modal .modal-header .close{
+    font-size:initial;
+    opacity:1;
+  }
+    /* new css end */
+  @media screen and (max-width: 767px) {
+    .modal-footer.related_popup_footer form {
+      display: block;
+    }
+  }
+  @media screen and (max-width: 1080px) and (min-width:900px){
+  	
+  }
+  @media screen and (max-width: 900px){
+    #cross-sell-popup .clock-popup-inner{
+      width: 95%!important;
+    }
+    #cross-sell-popup .clock-popup-inner {
+      margin: 5em auto;
+      padding: 2em 0em 2em 1em;
+    }
+    #cross-sell-popup .item-added{
+    	text-align:center!important;
+    }
+    div#cross-sell-popup .grid__item{
+      padding-left: 0px!important;
+      padding-right: 0px!important;
+    }
+    .related_pupup_rendome_parent {
+      padding: 0 10px 0 10px;
+    }  
+  }
+</style>  

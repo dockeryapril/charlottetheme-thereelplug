@@ -1,0 +1,127 @@
+{% unless grid_image_width %}
+  {%- assign grid_image_width = '200x200' -%}
+{% endunless %}
+{%- assign grid_image_scale = '1' -%}
+
+<div class="{% unless product.available %}product-price--sold-out grid-view-item--sold-out{% endunless %} newgrid">
+ <div class="card-wrapper">
+  <div class="card card--product{% if product.featured_media == nil %} card--text-only card--soft{% endif %}{% if product.featured_media != nil and show_image_outline %} card--outline{% endif %}" tabindex="-1">
+    <div class="card__inner">
+      {%- if product.featured_media -%}
+        {%- liquid
+          assign featured_media_aspect_ratio = product.featured_media.aspect_ratio
+
+          if product.featured_media.aspect_ratio == nil
+            assign featured_media_aspect_ratio = 1
+          endif
+        -%}
+
+        <div{% if add_image_padding %} class="card__media-full-spacer"{% endif %}>
+            
+      <a class="grid-view-item__link grid_set_box" href="{{ product.url | within: collection }}">
+          {% assign lazyclass="grid-view-item__image" %}
+          {% assign lazy_data_src= product.featured_image.src | img_url: grid_image_width %}
+        
+          <img class="variant_img" class="{{ lazyclass }} lazy" src="{{ lazy_data_src }}" data-original="" alt="{{ product.featured_image.alt }}">
+      </a>
+        </div>
+      {%- else -%}
+        <div class="card__content">
+          <h2 class="card__text h3">
+            <a href="{{ product.url | default: '#' }}" class="full-unstyled-link">
+              {{ product.title }}
+            </a>
+          </h2>
+        </div>
+      {%- endif -%}
+
+      <div class="card__badge">
+        {%- if product.available == false -%}
+          <span class="badge badge--bottom-left color-{{ settings.sold_out_badge_color_scheme }}">{{ 'products.product.sold_out' | t }}</span>
+        {%- elsif product.compare_at_price > product.price and product.available -%}
+          <span class="badge badge--bottom-left color-{{ settings.sale_badge_color_scheme }}">{{ 'products.product.on_sale' | t }}</span>
+        {%- endif -%}
+      </div>
+    </div>
+    <div class="cs_addtocartbutton">
+        {% for variant in  product.variants %}
+            {% if variant == product.selected_or_first_available_variant %}
+                {%- assign pp_id =  variant.id -%}
+            {% endif %}
+        {% endfor %}
+      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+      <button type="submit" id="AddtoCart-Cross-Sell-{{ product.id }}" class="product-form__submit button button--full-width {% if block.settings.show_dynamic_checkout and product.selling_plan_groups == empty %}button--secondary {% else %}button--primary {% endif %}{% if settings.enable_custom_atc %}custom-atc{% endif %}" value="{{ pp_id }}" data-variant="{{ pp_id }}" onclick="custom_addcart(this)">
+        {% if settings.enable_custom_atc %}
+           {% if settings.enable_atc_icon %}
+                {% if settings.cart_button_icon != blank %}
+                      <img src="{{ settings.cart_button_icon | img_url: '927x230'}}" alt="+" class="no-border ratina-img addIcon"/>
+                {% else %}
+                      {% render 'icon-plus' %}
+                {% endif %}
+           {% endif %}
+        {% endif %}
+                      
+        <span id="AddToCartText">
+          {%- if product.selected_or_first_available_variant.available -%}
+            {% if settings.enable_custom_atc %}{{ settings.add_to_cart_button_text }}{% else %}{{ 'products.product.add_to_cart' | t }}{% endif %}
+          {%- else -%}
+            {{ 'products.product.sold_out' | t }}
+          {%- endif -%}
+        </span>
+      </button>
+        
+                  
+    </div>
+  </div>
+  
+  <div class="card-information">
+    <div class="card-information__wrapper">
+      {%- if show_vendor -%}
+        <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
+        <div class="caption-with-letter-spacing light">{{ product.vendor }}</div>
+      {%- endif -%}
+
+      {%- if product.featured_media -%}
+        <h3 class="card-information__text h5">
+          <a href="{{ product.url | default: '#' }}" class="full-unstyled-link">
+            {{ product.title | escape }}
+          </a>
+        </h3>
+      {%- endif -%}
+    </div>
+  </div>
+ </div>
+   
+    {% assign hide_default_title = false %}
+        {% if product.variants.size == 1 and product.variants.first.title contains 'Default' %}
+          {% assign hide_default_title = true %}
+        {% endif %}
+   	<div class="grid-view-item__meta">
+      <p class="crossssellprice">
+        <span class="money"> {% render 'price', product: product, price_class: '' %}</span>
+     </p>
+    </div>
+  
+    <select name="id" id="productSelect--{{ product.id }}" class="select__select product-single-variants {% if product.has_only_default_variant %}no-js{% endif %}">
+       {% for variant in product.variants %}
+         {% if variant.available %}
+           <option {% if product.has_only_default_variant %}hidden {% endif %}data-option1="{{ variant.option1 | escape }}" data-option2="{{ variant.option2 | escape }}" data-option3="{{ variant.option3 | escape }}" {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title }}</option>
+         {% endif %}
+       {% endfor %}
+    </select>
+  	
+    <input type="hidden"name="id" id="product-select-{{ product.id }}" value=" " />
+    
+  	<script>
+        $(document).ready(function(){
+        	$("select.product-single-variants").on('change', function() {
+               var variant = $(this).val();
+          		window.history.replaceState(null, null, "?variant="+variant);
+          			$('#product-select-{{ product.id }}').val(variant);
+               	 	$(this).parent().find('#AddtoCart-Cross-Sell-{{ product.id }}').val(variant);  
+                	$(this).parent().find('#AddtoCart-Cross-Sell-{{ product.id }}').attr("data-variant",variant);                   
+        		});
+    	});
+    </script>
+      
+</div>

@@ -1,0 +1,40 @@
+<script>
+  jQuery(document).ready(function() {
+    setInterval(function(){ 
+      jQuery.getJSON('/cart.js', function(cart) {
+          // now have access to Shopify cart object
+          var free_shipping = "{{ section.settings.international_shipping }}";
+          //var national_shipping = ' section.settings.national_shipping }}'; 
+          var international_shipping = "{{ section.settings.international_shipping }}";
+          if (cart.total_price == 0) {
+              var total_price = cart.total_price + ".00";
+          } else {
+              var semi_total = cart.total_price.toString();
+              var len = semi_total.length;
+              var total_price = semi_total.substring(0, len-2) + "." + semi_total.substring(len-2);
+          }
+          var strip_bar_msg = "{{ section.settings.fs_shipping_text }}";
+          //var total_price = "{{ cart.total_price | money | remove: ','}}";
+          var money_symbol_free = free_shipping.charAt(0);
+          var money_symbol_total = total_price.charAt(0);
+          var shipping_free = "{{ section.settings.free_shipping_text_free}}";
+          var shipping = Number.parseInt(free_shipping.replace(money_symbol_free, "")) - Number.parseInt(total_price);
+          var formated = Shopify.formatMoney((shipping*100));
+
+          //alert(total_price);
+          if(strip_bar_msg != "" && strip_bar_msg != undefined){
+            if (Number.parseInt(total_price) >= Number.parseInt(free_shipping.replace(money_symbol_free, ""))) {
+                $("p.fs-shipping-text").html(strip_bar_msg.replace("XX", "$0.00").replace("$$", "$0.00").replace("$x", "$0.00").replace("$X", "$0.00"));
+                  if ($('p.fs-shipping-text:contains("$0.00")').length > 0) {
+                       $("p.fs-shipping-text").html(shipping_free);
+                  }
+            }
+            else {
+              $("p.fs-shipping-text").html(strip_bar_msg.replace("XX", formated).replace("$$", formated).replace("$x", formated).replace("$X", formated)); 
+            }
+          }
+
+      });
+     }, 1000);
+  });
+   </script>

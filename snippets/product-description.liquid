@@ -1,0 +1,85 @@
+<div class="ajax-loader" style="display:none;">
+  <img src="{{'ajax-loader.gif' | asset_url}}" style="vertical-align: bottom;margin-right: 5px;"> <strong style="font-size:18px;color:rgb(var(--color-base-outline-button-labels));">PRODUCT DESCRIPTION</strong>
+</div> 
+<div class="product-description-area">
+  <div class="product-tabs-{{product.id}}">
+    <meta charset="utf-8">
+    <div class="product-single__content-text">
+      {{ product.description }}
+    </div>  
+  </div>
+</div>
+<hr>
+<script>
+  setInterval(function() {
+  if ($(".product__description h6")[0]){  
+    if ($("span.product-single__accordion__title-icon")[0]){
+      $(".product-description-area p").fadeIn();
+      $(".product-description-area ul").fadeIn();
+      $(".product-description-area ol").fadeIn();
+      $("div.ajax-loader").fadeOut();
+      }
+    else{
+      $(".product-description-area p").fadeOut();
+      $(".product-description-area ul").fadeOut();
+      $(".product-description-area ol").fadeOut();
+      $(".product-single__content-text h6").css("color","rgb(var(--color-base-outline-button-labels))");
+      $(".product-single__content-text h6").css("font-size","18px");
+      $(".product-single__content-text h6").css("text-transform","uppercase");
+      $("div.ajax-loader").fadeIn();
+    }
+  }
+  },0); 
+</script>
+<script>   
+  /** Unique tabs using H6 as an anchor **/
+  document.addEventListener('DOMContentLoaded', function(event) {
+    $($('.product__description').find('h6').get().reverse()).each(function(i) {
+        var tabName = $(this).text();
+    	var tabContent = '';
+      
+        //check if h6 has text inside
+      if ($(this).text() != '') {
+            //hide h6
+          $(this).hide();
+            //combine content between H6 elements
+            $(this).nextUntil('h6').each(function() {
+                tabContent = tabContent + this.outerHTML;
+                //hide content
+                $(this).hide();
+            });
+        
+            $('.product-single__content-text').insertBefore('.product-description-area');
+            $('.product-tabs-{{product.id}}').prepend('<div id="acc-unique-'+ [i] +'" class="product-single__accordion__item js-unique-info" style="display:none;"><div class="product-single__accordion__item-wrap">' + tabContent + '</div></div>');
+            $('.product-tabs-{{product.id}}').prepend('<a href="#acc-unique-'+ [i] +'" class="product-single__accordion__title js-unique-trigger"><h6 class="product-single__accordion__title-text">' + tabName + '</h6><span class="product-single__accordion__title-icon icon-fallback">+</span></a>');     
+
+         } else {  
+            //hide empty H6
+            $(this).hide();
+        }
+    });
+
+    $(".js-unique-trigger").click(function() {
+      var thisItem = $(this).attr("href");
+      var activeClass = "js-active";
+
+      //check if clicked is active
+      if ($(thisItem).hasClass(activeClass)) {
+        //close current item
+        $(this).removeClass(activeClass);
+        $(thisItem)
+        .removeClass(activeClass)
+        .stop()
+        .slideUp();
+      } else {
+        //open and activate this item
+        $(thisItem)
+        .addClass(activeClass)
+        .stop()
+        .slideDown();
+        $(this).addClass(activeClass);
+      }
+      return false;
+    });
+  });
+</script>

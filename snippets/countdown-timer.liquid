@@ -1,0 +1,574 @@
+{% if end_date != blank %}
+<div class="timer">
+  <h4 class="timer__title">{{ section.settings.countdown_timer_text }}</h4>
+  <div class="timer-display">
+    <div class="timer-block">
+      <canvas id="days-canvas" width="200" height="200"></canvas>
+      <div class="timer-num-unit">
+      <span class="timer-block__num" id="js-timer-days">00</span>
+      <span class="timer-block__unit">Days</span>
+      </div>
+    </div>
+    <div class="timer-block">
+      <canvas id="hours-canvas" width="200" height="200"></canvas>
+      <div class="timer-num-unit">
+      <span class="timer-block__num" id="js-timer-hours">00</span>
+      <span class="timer-block__unit">Hours</span>
+      </div>
+    </div>
+    <div class="timer-block">
+      <canvas id="minutes-canvas" width="200" height="200"></canvas>
+      <div class="timer-num-unit">
+      <span class="timer-block__num" id="js-timer-minutes">00</span>
+      <span class="timer-block__unit">Minutes</span>
+      </div>
+    </div>
+    <div class="timer-block">
+      <canvas id="seconds-canvas" width="200" height="200"></canvas>
+      <div class="timer-num-unit">
+      <span class="timer-block__num" id="js-timer-seconds">00</span>
+      <span class="timer-block__unit">Seconds</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <p class="tags-list" id="tag">
+      {% for tag in product.tags %}
+        {% if tag contains 'sale-end' %}
+           <input type="hidden" id="sale-end-date" value="{{ tag }}" />
+    		<script>
+              var str = "{{ tag }}";
+              var now = new Date();
+              var res = str.substring(09, 20);
+        	</script>
+        {% else %}
+    		<script>
+             $(".offer-countdown-timer").hide();
+          	</script>
+        {% endif %}
+    	
+      {% endfor %}
+    </p>
+
+{% for tag in product.tags %}
+  {% if tag contains 'sale-end' %}
+<script>
+  const end_date = new Date(res).getTime();
+  // Context object
+  const c = {
+    context: {},
+    values: {}, 
+    times: {}
+  };
+
+  // Convert radians to degrees
+  function deg(d) {
+    return (Math.PI/180)*d-(Math.PI/180)*90;
+  }
+
+  function render() {
+    c.context.seconds.clearRect(0, 0, 200, 200);
+    c.context.seconds.beginPath();
+    c.context.seconds.strokeStyle = "{{ section.settings.countdown_timer_color }}";
+    c.context.seconds.arc(100, 100, 90, deg(0), deg(6 * (60 - c.times.seconds)));
+    c.context.seconds.lineWidth = 8;
+    c.context.seconds.lineCap = "round"; 
+    c.context.seconds.stroke();
+
+    c.context.minutes.clearRect(0, 0, 200, 200);
+    c.context.minutes.beginPath();
+    c.context.minutes.strokeStyle = "{{ section.settings.countdown_timer_color }}";
+    c.context.minutes.arc(100, 100, 90, deg(0), deg(6 * (60 - c.times.minutes)));
+    c.context.minutes.lineWidth = 8;
+    c.context.minutes.lineCap = "round"; 
+    c.context.minutes.stroke();
+
+    c.context.hours.clearRect(0, 0, 200, 200);
+    c.context.hours.beginPath();
+    c.context.hours.strokeStyle = "{{ section.settings.countdown_timer_color }}";
+    c.context.hours.arc(100, 100, 90, deg(0), deg(15 * (24 - c.times.hours)));
+    c.context.hours.lineWidth = 8;
+    c.context.hours.lineCap = "round"; 
+    c.context.hours.stroke();
+
+    c.context.days.clearRect(0, 0, 200, 200);
+    c.context.days.beginPath();
+    c.context.days.strokeStyle = "{{ section.settings.countdown_timer_color }}";
+    c.context.days.arc(100, 100, 90, deg(0), deg(365 - c.times.days));
+    c.context.days.lineWidth = 8;
+    c.context.days.lineCap = "round"; 
+    c.context.days.stroke();
+  }
+
+  function init() {
+    // Get 2D contexts
+    c.context.seconds = document.getElementById('seconds-canvas').getContext('2d');
+    c.context.minutes = document.getElementById('minutes-canvas').getContext('2d');
+    c.context.hours = document.getElementById('hours-canvas').getContext('2d');
+    c.context.days = document.getElementById('days-canvas').getContext('2d');
+
+    // Get displayed values
+    c.values.seconds = document.getElementById('js-timer-seconds');
+    c.values.minutes = document.getElementById('js-timer-minutes');
+    c.values.hours = document.getElementById('js-timer-hours');
+    c.values.days = document.getElementById('js-timer-days');
+
+
+    setInterval(function() {
+
+      const now = new Date();
+      var str = $('#sale-end-date').val();
+      var res = str.substring(09, 20);
+      // Get distance from now to launchDate
+      const distance = end_date - now;
+
+      // Time calculations
+      c.times.days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      c.times.hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      c.times.minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      c.times.seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      c.values.days.innerText = c.times.days;
+      c.values.hours.innerText = c.times.hours;
+      c.values.minutes.innerText = c.times.minutes;
+      c.values.seconds.innerText = c.times.seconds;
+
+      render(); // Draw!
+              	
+      if(distance <= 0) {
+        $(".offer-countdown-timer").hide();
+        $(".timer-display").hide();
+      }
+      else if(res === '' || res == null || str === ''){
+        $(".offer-countdown-timer").hide();
+      }
+      else{
+        $(".offer-countdown-timer").show();
+      }
+    }, 1000);
+    
+  }
+
+  init();
+  
+</script>
+ {% endif %}
+{% endfor %}
+
+<style>
+
+/*COUNTDOWN TIMER*/
+  
+  .timer-block canvas {
+  	max-width: 100%;
+  }
+  .timer-display {
+  	display: flex;
+  	justify-content: space-between;
+  	margin-top: 25px;
+    text-align:center;
+    flex-direction: row;
+    align-items: center;
+  }
+  .timer-display .container {
+    position: relative;
+  }
+  .timer svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .timer-block__num {
+    color: rgb(var(--color-foreground));
+    line-height:1;
+    text-align: center;
+  }
+  .timer-block__unit {
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground));
+  }
+
+/* styles for timer */
+  .timer {
+    background: {{ section.settings.color_borders }};
+    padding: 20px 10px 25px 10px;
+    margin: 20px 0 10px 0;
+  }
+  .timer--expired {
+    display: none;
+  }
+  .timer__title {
+    text-align: center;
+    color:{{ section.settings.countdown_timer_text_color }};
+    font-size: {{ section.settings.countdown_timer_text_font_size }};
+    font-weight:{{  section.settings.countdown_timer_text_font_weight }};
+    margin-top: 0;
+  }
+  .timer-num-unit{
+    display: grid;
+    grid-row-gap: 5px;
+    justify-content: center;
+    align-content: center;
+    position: absolute;
+    align-items: center;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+  .timer-block {
+    position: relative;
+    width: 25%;
+    padding: 0 10px;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+  }
+
+{% if section.settings.image_size  == "small" %}
+  @media screen and (min-width: 990px){ 
+      .timer-block__num {
+        font-size:40px!important;
+      }  
+      .timer-block__unit {
+        font-size: 16px!important;
+      }
+  }
+  @media screen and (max-width: 990px) and (min-width: 800px){
+      .timer-num-unit {
+        grid-row-gap: 0px;
+      } 
+      .timer-block{
+        padding: 0 2px;
+      }
+      .timer-block__num {
+        font-size:25px;
+      }  
+      .timer-block__unit {
+        font-size: 11px;
+      }
+  }
+  @media screen and (max-width: 800px) and (min-width: 750px){
+      .timer-num-unit {
+        grid-row-gap: 0px;
+      } 
+      .timer-block{
+        padding: 0 2px;
+      }
+      .timer-block__num {
+        font-size:20px;
+      }  
+      .timer-block__unit {
+        font-size: 10px;
+      }
+  }  
+  @media screen and (max-width: 749px) and (min-width: 600px){
+      .timer-block__num {
+        font-size:30px;
+      }  
+      .timer-block__unit {
+        font-size: 14px;
+      }
+  }
+  @media screen and (max-width: 600px) and (min-width: 400px){ 
+    .timer-block__num {
+      font-size:25px;
+    }  
+    .timer-block__unit {
+      font-size: 11px;
+    }
+  }
+  @media screen and (max-width: 400px){
+    .timer-num-unit {
+      grid-row-gap: 0px;
+    } 
+    .timer-block{
+      padding: 0 2px;
+    }
+    .timer {
+        padding: 20px 10px 30px 10px!important;
+    }
+    .timer__title {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+  } 
+  @media screen and (max-width: 400px) and (min-width: 300px){
+    .timer-block__num {
+      font-size:20px;
+    }  
+    .timer-block__unit {
+      font-size: 9px;
+    }
+  } 
+  @media screen and (max-width: 300px){
+    .timer-block__num {
+      font-size:18px;
+    }  
+    .timer-block__unit {
+      font-size: 7px;
+    }
+    .timer-block{
+      padding: 0 0px;
+    }
+  } 
+{% endif %}
+  
+{% if section.settings.image_size  == "medium" %}
+  @media screen and (min-width: 990px){ 
+      .timer-num-unit {
+        grid-row-gap: 0px;
+      } 
+      .timer-block__num {
+        font-size:30px;
+      }  
+      .timer-block__unit {
+        font-size: 12px;
+      }
+  }
+  @media screen and (max-width: 990px) and (min-width: 800px){
+      .timer-num-unit {
+        grid-row-gap: 0px;
+      } 
+      .timer-block{
+        padding: 0 2px;
+      }
+      .timer-block__num {
+        font-size:25px;
+      }  
+      .timer-block__unit {
+        font-size: 11px;
+      }
+  }
+  @media screen and (max-width: 800px) and (min-width: 750px){
+      .timer-num-unit {
+        grid-row-gap: 0px;
+      } 
+      .timer-block{
+        padding: 0 2px;
+      }
+      .timer-block__num {
+        font-size:20px;
+      }  
+      .timer-block__unit {
+        font-size: 10px;
+      }
+  }  
+  @media screen and (max-width: 749px) and (min-width: 600px){
+      .timer-block__num {
+        font-size:30px;
+      }  
+      .timer-block__unit {
+        font-size: 14px;
+      }
+  }
+  @media screen and (max-width: 600px) and (min-width: 400px){ 
+    .timer-block__num {
+      font-size:25px;
+    }  
+    .timer-block__unit {
+      font-size: 11px;
+    }
+  }
+  @media screen and (max-width: 400px){
+    .timer-num-unit {
+      grid-row-gap: 0px;
+    } 
+    .timer-block{
+      padding: 0 2px;
+    }
+    .timer {
+        padding: 20px 10px 30px 10px!important;
+    }
+    .timer__title {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+  } 
+  @media screen and (max-width: 400px) and (min-width: 300px){
+    .timer-block__num {
+      font-size:20px;
+    }  
+    .timer-block__unit {
+      font-size: 9px;
+    }
+  } 
+  @media screen and (max-width: 300px){
+    .timer-block__num {
+      font-size:18px;
+    }  
+    .timer-block__unit {
+      font-size: 7px;
+    }
+    .timer-block{
+      padding: 0 0px;
+    }
+  } 
+{% endif %} 
+  
+{% if section.settings.image_size  == "large" %}
+  @media screen and (min-width: 990px){ 
+      .timer-num-unit {
+        grid-row-gap: 0px;
+      } 
+      .timer-block{
+        padding: 0 0px;
+      }
+      .timer-block__num {
+        font-size:20px;
+      }  
+      .timer-block__unit {
+        font-size: 9px;
+      }
+  }
+  @media screen and (max-width: 990px) and (min-width: 800px){
+      .timer-num-unit {
+        grid-row-gap: 0px;
+      } 
+      .timer-block{
+        padding: 0 2px;
+      }
+      .timer-block__num {
+        font-size:20px;
+      }  
+      .timer-block__unit {
+        font-size: 10px;
+      }
+  }
+  @media screen and (max-width: 800px) and (min-width: 750px){
+      .timer-num-unit {
+        grid-row-gap: 0px;
+      } 
+      .timer-block{
+        padding: 0 2px;
+      }
+      .timer-block__num {
+        font-size:20px;
+      }  
+      .timer-block__unit {
+        font-size: 10px;
+      }
+  }  
+  @media screen and (max-width: 749px) and (min-width: 600px){
+      .timer-block__num {
+        font-size:30px;
+      }  
+      .timer-block__unit {
+        font-size: 14px;
+      }
+  }
+  @media screen and (max-width: 600px) and (min-width: 400px){ 
+    .timer-block__num {
+      font-size:25px;
+    }  
+    .timer-block__unit {
+      font-size: 11px;
+    }
+  }
+  @media screen and (max-width: 400px){
+    .timer-num-unit {
+      grid-row-gap: 0px;
+    } 
+    .timer-block{
+      padding: 0 2px;
+    }
+    .timer {
+        padding: 20px 10px 30px 10px!important;
+    }
+    .timer__title {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+  } 
+  @media screen and (max-width: 400px) and (min-width: 300px){
+    .timer-block__num {
+      font-size:20px;
+    }  
+    .timer-block__unit {
+      font-size: 9px;
+    }
+  } 
+  @media screen and (max-width: 300px){
+    .timer-block__num {
+      font-size:18px;
+    }  
+    .timer-block__unit {
+      font-size: 7px;
+    }
+    .timer-block{
+      padding: 0 0px;
+    }
+  } 
+{% endif %}    
+  
+{% if section.settings.image_size  == "full" %} 
+  @media screen and (min-width: 601px){ 
+    .timer-block__num {
+      font-size:40px;
+    }  
+    .timer-block__unit {
+      font-size: 16px;
+    }
+  }
+  @media screen and (max-width: 600px) and (min-width: 500px){ 
+    .timer-block__num {
+      font-size:30px;
+    }  
+    .timer-block__unit {
+      font-size: 14px;
+    }
+  }
+  @media screen and (max-width: 400px){
+    .timer-num-unit {
+      grid-row-gap: 0px;
+    } 
+    .timer-block{
+      padding: 0 2px;
+    }
+    .timer {
+        padding: 20px 10px 30px 10px!important;
+    }
+    .timer__title {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+  }  
+  @media screen and (max-width: 500px) and (min-width: 400px){
+    .timer-block__num {
+      font-size:25px;
+    }  
+    .timer-block__unit {
+      font-size: 11px;
+    }
+  }
+  @media screen and (max-width: 400px) and (min-width: 300px){
+    .timer-block__num {
+      font-size:20px;
+    }  
+    .timer-block__unit {
+      font-size: 9px;
+    }
+  } 
+  @media screen and (max-width: 300px){
+    .timer-block__num {
+      font-size:18px;
+    }  
+    .timer-block__unit {
+      font-size: 7px;
+    }
+    .timer-block{
+      padding: 0 0px;
+    }
+  }  
+{% endif %}
+  
+
+  
+  
+  
+  
+</style>
+  
+{% endif %}
+

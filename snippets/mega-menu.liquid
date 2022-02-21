@@ -1,0 +1,1350 @@
+{% if section.settings.show_mega_menu == true %}
+    <div class="ruby-menu-header {% if section.settings.logo_position == 'top-left' %}main-menu-left{% elsif section.settings.logo_position == 'top-center'%}main-menu-center{% endif %}">
+      <nav class="header__inline-menu ruby-mega-menu{% if settings.enable_full_width %} enable-full-width{% else %} page-width{% endif %}"{% if section.settings.logo_position == 'top-center' %} style="width: max-content;margin: 0 auto;"{% endif %}>
+       <ul class="list-menu list-menu--inline ruby-menu">
+           {%- for link in section.settings.menu.links -%}
+          	{%- assign mega_menu = section.settings.mega_menu_title -%}
+            {%- assign home_menu = 'Home' -%}
+          	{%- assign nav_menu = link.title | escape -%}
+              {% if link.links != blank %}
+              <li {% if link.active %}class="ruby-active-menu-item{% if home_menu == nav_menu %} home-menu{% endif %}" {% else %}{% if home_menu == nav_menu %}class="home-menu"{% endif %}{% endif %}{% if mega_menu == nav_menu %}class="match-with-mega-menu"{% endif %}><a href="{{ link.url }}">{{ link.title | escape }}</a>
+                <span class="ruby-dropdown-toggle megamenu-sub"></span>
+                <ul class="sub-menu sub-menu-c">
+                  {% for childlink in link.links %}
+                    <li {% if childlink.active %} class="ruby-active-menu-item" {% endif %} >
+                      <a href="{{ childlink.url }}" class="{% if forloop.last %} site-nav__link--last{% endif %}" {% if childlink.current %} aria-current="page"{% endif %}>
+                        {{ childlink.title | escape }}
+                      </a>
+                      {% if childlink.links != blank %}
+                        <ul class="sub-menu sub-menu-gc">
+                        {% for grandchildlink in childlink.links %}
+                          <li {% if grandchildlink.active %} class="ruby-active-menu-item" {% endif %} >
+                            <a href="{{ grandchildlink.url }}" {% if grandchildlink.current %} aria-current="page"{% endif %}>
+                              {{ grandchildlink.title | escape }}
+                            </a>
+                          </li>
+                        {% endfor %}
+                        </ul>
+                      {% endif %}
+                    </li>
+                  {% endfor %}
+                </ul>
+              </li>
+            {% else %}
+              <li {% if link.active %} class="ruby-active-menu-item{% if home_menu == nav_menu %} home-menu{% endif %}" {% else %}{% if home_menu == nav_menu %}class="home-menu"{% endif %}{% endif %}{% if mega_menu == nav_menu %}class="match-with-mega-menu"{% endif %}><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+            {% endif %}
+            {%- endfor -%} 
+          {% if section.settings.enable_mega_menu_1 or section.settings.enable_mega_menu_2 or section.settings.enable_mega_menu_3 or section.settings.enable_mega_menu_4 or section.settings.enable_mega_menu_5 or section.settings.enable_mega_menu_6 %}
+          <li class="ruby-menu-mega"><a href="#">{% if section.settings.mega_menu_title != blank %} {{ section.settings.mega_menu_title }} {% else %} Mega Menu {% endif %}</a>
+            <div class="ruby-grid ruby-grid-lined{% if settings.enable_full_width %} enable-full-width{% else %} page-width{% endif %}">
+              <div class="ruby-row">
+                  <div class="ruby-col-7">
+                    <div class="ruby-row pb-20">
+                      {% if section.settings.enable_mega_menu_1 and section.settings.mega_menu_1 != blank %}
+                        <div class="ruby-col-4">
+                          <div class="media 1">
+                            <div class="media-left">
+                              	{% if section.settings.mega_menu_1_image != blank %}
+                                	<img class="lazyload js mega-menu-image"src="{{ section.settings.mega_menu_1_image | img_url: 'original' }}" />
+                            	{% else %}
+                              		{% capture current %}{% cycle 1 %}{% endcapture %}
+                          			{{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                              	{% endif %}
+                            </div>
+                            <div class="media-body">
+                              {% if section.settings.mega_menu_1_title_url != blank %}
+                              	<h4><a href="{{ section.settings.mega_menu_1_title_url }}">{% if section.settings.mega_menu_1_title != blank %} {{ section.settings.mega_menu_1_title }} {% else %} Mega Menu 1{% endif %}</a></h4>
+                              {% else %}
+                              	<h4>{% if section.settings.mega_menu_1_title != blank %} {{ section.settings.mega_menu_1_title }} {% else %} Mega Menu 1{% endif %}</h4>
+                              {% endif %}
+                              {% if section.settings.mega_menu_1 %}
+                                {% for link in linklists[section.settings.mega_menu_1].links %}
+                                  <p><a href="{{ link.url }}">{{ link.title | escape }}</a></p>
+                                {% endfor %}
+                             {% endif %}
+                            </div>
+                          </div>
+                        </div>
+                      {% endif %}
+                      {% if section.settings.enable_mega_menu_2 and section.settings.mega_menu_2 != blank %}
+                        <div class="ruby-col-4">
+                          <div class="media">
+                            <div class="media-left">
+                              	{% if section.settings.mega_menu_2_image != blank %}
+                                	<img class="lazyload js mega-menu-image"src="{{ section.settings.mega_menu_2_image | img_url: 'original' }}" />
+                            	{% else %}
+                              		{% capture current %}{% cycle 2 %}{% endcapture %}
+                          			{{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                              	{% endif %}
+                            </div>
+                            <div class="media-body">
+                              {% if section.settings.mega_menu_2_title_url != blank %}
+                              	<h4><a href="{{ section.settings.mega_menu_2_title_url }}">{% if section.settings.mega_menu_2_title != blank %} {{ section.settings.mega_menu_2_title }} {% else %} Mega Menu 2{% endif %}</a></h4>
+                              {% else %}
+                              	<h4>{% if section.settings.mega_menu_2_title != blank %} {{ section.settings.mega_menu_2_title }} {% else %} Mega Menu 2{% endif %}</h4>
+                              {% endif %}
+                              {% if section.settings.mega_menu_2 %}
+                                {% for link in linklists[section.settings.mega_menu_2].links %}
+                                  <p><a href="{{ link.url }}">{{ link.title | escape }}</a></p>
+                                {% endfor %}
+                             {% endif %}
+                            </div>
+                          </div>
+                        </div>
+                      {% endif %}
+                      {% if section.settings.enable_mega_menu_3 and section.settings.mega_menu_3 != blank %}
+                        <div class="ruby-col-4">
+                          <div class="media">
+                            <div class="media-left">
+                              	{% if section.settings.mega_menu_3_image != blank %}
+                                	<img class="lazyload js mega-menu-image"src="{{ section.settings.mega_menu_3_image | img_url: 'original' }}" />
+                            	{% else %}
+                              		{% capture current %}{% cycle 3 %}{% endcapture %}
+                          			{{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                              	{% endif %}
+                            </div>
+                            <div class="media-body">
+                              {% if section.settings.mega_menu_3_title_url != blank %}
+                              	<h4><a href="{{ section.settings.mega_menu_3_title_url }}">{% if section.settings.mega_menu_3_title != blank %} {{ section.settings.mega_menu_3_title }} {% else %} Mega Menu 3{% endif %}</a></h4>
+                              {% else %}
+                              	<h4>{% if section.settings.mega_menu_3_title != blank %} {{ section.settings.mega_menu_3_title }} {% else %} Mega Menu 3{% endif %}</h4>
+                              {% endif %}
+                              {% if section.settings.mega_menu_3 %}
+                                {% for link in linklists[section.settings.mega_menu_3].links %}
+                                  <p><a href="{{ link.url }}">{{ link.title | escape }}</a></p>
+                                {% endfor %}
+                             {% endif %}
+                            </div>
+                          </div>
+                        </div>
+                      {% endif %}
+                    </div>
+                    <div class="ruby-row">
+                      {% if section.settings.enable_mega_menu_4 and section.settings.mega_menu_4 != blank %}
+                        <div class="ruby-col-4">
+                          <div class="media">
+                            <div class="media-left">
+                              	{% if section.settings.mega_menu_4_image != blank %}
+                                	<img class="lazyload js mega-menu-image"src="{{ section.settings.mega_menu_4_image | img_url: 'original' }}" />
+                            	{% else %}
+                              		{% capture current %}{% cycle 4 %}{% endcapture %}
+                          			{{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                              	{% endif %}
+                            </div>
+                            <div class="media-body">
+                              {% if section.settings.mega_menu_4_title_url != blank %}
+                              	<h4><a href="{{ section.settings.mega_menu_4_title_url }}">{% if section.settings.mega_menu_4_title != blank %} {{ section.settings.mega_menu_4_title }} {% else %} Mega Menu 4{% endif %}</a></h4>
+                              {% else %}
+                              	<h4>{% if section.settings.mega_menu_4_title != blank %} {{ section.settings.mega_menu_4_title }} {% else %} Mega Menu 4{% endif %}</h4>
+                              {% endif %}
+                              {% if section.settings.mega_menu_4 %}
+                                {% for link in linklists[section.settings.mega_menu_4].links %}
+                                  <p><a href="{{ link.url }}">{{ link.title | escape }}</a></p>
+                                {% endfor %}
+                             {% endif %}
+                            </div>
+                          </div>
+                        </div>
+                      {% endif %}
+                      {% if section.settings.enable_mega_menu_5 and section.settings.mega_menu_5 != blank %}
+                        <div class="ruby-col-4">
+                          <div class="media">
+                            <div class="media-left">
+                              	{% if section.settings.mega_menu_5_image != blank %}
+                                	<img class="lazyload js mega-menu-image"src="{{ section.settings.mega_menu_5_image | img_url: 'original' }}" />
+                            	{% else %}
+                              		{% capture current %}{% cycle 5 %}{% endcapture %}
+                          			{{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                              	{% endif %}
+                            </div>
+                            <div class="media-body">
+                              {% if section.settings.mega_menu_5_title_url != blank %}
+                              	<h4><a href="{{ section.settings.mega_menu_5_title_url }}">{% if section.settings.mega_menu_5_title != blank %} {{ section.settings.mega_menu_5_title }} {% else %} Mega Menu 5{% endif %}</a></h4>
+                              {% else %}
+                              	<h4>{% if section.settings.mega_menu_5_title != blank %} {{ section.settings.mega_menu_5_title }} {% else %} Mega Menu 5{% endif %}</h4>
+                              {% endif %}
+                              {% if section.settings.mega_menu_5 %}
+                                {% for link in linklists[section.settings.mega_menu_5].links %}
+                                  <p><a href="{{ link.url }}">{{ link.title | escape }}</a></p>
+                                {% endfor %}
+                             {% endif %}
+                            </div>
+                          </div>
+                        </div>
+                      {% endif %}
+                      {% if section.settings.enable_mega_menu_6 and section.settings.mega_menu_6 != blank %}
+                        <div class="ruby-col-4">
+                          <div class="media">
+                            <div class="media-left">
+                              	{% if section.settings.mega_menu_6_image != blank %}
+                                	<img class="lazyload js mega-menu-image"src="{{ section.settings.mega_menu_6_image | img_url: 'original' }}" />
+                            	{% else %}
+                              		{% capture current %}{% cycle 6 %}{% endcapture %}
+                          			{{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                              	{% endif %}
+                            </div>
+                            <div class="media-body">
+                              {% if section.settings.mega_menu_6_title_url != blank %}
+                              	<h4><a href="{{ section.settings.mega_menu_6_title_url }}">{% if section.settings.mega_menu_6_title != blank %} {{ section.settings.mega_menu_6_title }} {% else %} Mega Menu 6{% endif %}</a></h4>
+                              {% else %}
+                              	<h4>{% if section.settings.mega_menu_6_title != blank %} {{ section.settings.mega_menu_6_title }} {% else %} Mega Menu 6{% endif %}</h4>
+                              {% endif %}
+                              {% if section.settings.mega_menu_6 %}
+                                {% for link in linklists[section.settings.mega_menu_6].links %}
+                                  <p><a href="{{ link.url }}">{{ link.title | escape }}</a></p>
+                                {% endfor %}
+                             {% endif %}
+                            </div>
+                          </div>
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="ruby-col-5">
+                    <div class="ruby-row">
+                      {% for product in collections.all.products limit: 2 %}
+                      <div class="ruby-col-6 product-column">
+                        <a class="collection-product-link" href="{{ product.url }}">
+                          <img class="collection-product" src="{{ product.featured_image | product_img_url: 'medium' }}" alt="{{ product.title | escape  }}" /> 
+                          <p class="ruby-list-heading h4">{{product.title}}</p>
+                           {% render 'price', product: product, price_class: '' %}
+                        </a>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                
+              </div>
+            </div>
+          </li>
+          {% endif %}
+          {% if section.settings.show_mega_menu_collections %}
+            <li class="ruby-menu-mega"><a href="#">{{ section.settings.mega_menu_collections_title }}</a>
+              <div class="ruby-grid ruby-grid-lined{% if settings.enable_full_width %} enable-full-width{% else %} page-width{% endif %}">
+                <div class="ruby-row collections">
+                  {% for collection in collections %}
+                    <div class="ruby-col-2">
+                        {% if collection.image %}
+                      	  <a href="{{ collection.url }}">	
+                            <div class="collection-container" style="background-image:url({{ collection | img_url: '450x450' }})">&nbsp;</div>
+                            <p class="ruby-list-heading-collection h4">{{collection.title}}</p>
+                          </a>  
+                        {% else %}
+                          <a href="{{ collection.url }}">	
+                            <div class="collection-container" style="background-image:url({{ collection.products.first | img_url: '450x450' }})">&nbsp;</div>
+                            <p class="ruby-list-heading-collection h4">{{collection.title}}</p>
+                          </a> 
+                        {% endif %}
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </li>
+          {% endif %}
+        </ul>
+
+          {%- if section.settings.logo_position == 'top-left' -%}      
+          <div class="header__icons">
+            <details-modal class="header__search">
+              <details>
+                <summary class="header__icon header__icon--search header__icon--summary link focus-inset modal__toggle" aria-haspopup="dialog" aria-label="{{ 'general.search.search' | t }}">
+                  <span>
+                    <svg class="modal__toggle-open icon icon-search" aria-hidden="true" focusable="false" role="presentation">
+                      <use href="#icon-search">
+                    </svg>
+                    <svg class="modal__toggle-close icon icon-close" aria-hidden="true" focusable="false" role="presentation">
+                      <use href="#icon-close">
+                    </svg>
+                  </span>
+                </summary>
+                <div class="search-modal modal__content" role="dialog" aria-modal="true" aria-label="{{ 'general.search.search' | t }}">
+                  <div class="modal-overlay"></div>
+                  <div class="search-modal__content" tabindex="-1">
+                    {%- if settings.predictive_search_enabled -%}
+                      <predictive-search class="search-modal__form" data-loading-text="{{ 'accessibility.loading' | t }}">
+                    {%- endif -%} 
+                      <form action="{{ routes.search_url }}" method="get" role="search" class="search search-modal__form">
+                        <div class="field">
+                          <input class="search__input field__input" 
+                            id="Search-In-Modal"
+                            type="search"
+                            name="q"
+                            value=""
+                            placeholder="{{ 'general.search.search' | t }}"
+                            {%- if settings.predictive_search_enabled -%}
+                              role="combobox"
+                              aria-expanded="false"
+                              aria-owns="predictive-search-results-list"
+                              aria-controls="predictive-search-results-list"
+                              aria-haspopup="listbox"
+                              aria-autocomplete="list"
+                              autocorrect="off"
+                              autocomplete="off"
+                              autocapitalize="off"
+                              spellcheck="false" 
+                            {%- endif -%}
+                          >
+                          <label class="field__label" for="Search-In-Modal">{{ 'general.search.search' | t }}</label>
+                          <input type="hidden" name="options[prefix]" value="last">
+                          <button class="search__button field__button" aria-label="{{ 'general.search.search' | t }}">
+                            <svg class="icon icon-search" aria-hidden="true" focusable="false" role="presentation">
+                              <use href="#icon-search">
+                            </svg>
+                          </button> 
+                        </div>
+
+                        {%- if settings.predictive_search_enabled -%}
+                          <div class="predictive-search predictive-search--header" tabindex="-1" data-predictive-search>
+                            <div class="predictive-search__loading-state">
+                              <svg aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                                <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                              </svg>
+                            </div>
+                          </div>
+
+                          <span class="predictive-search-status visually-hidden" role="status" aria-hidden="true"></span>
+                        {%- endif -%}
+                      </form>
+                    {%- if settings.predictive_search_enabled -%}
+                      </predictive-search>
+                    {%- endif -%}
+                    <button type="button" class="search-modal__close-button modal__close-button link link--text focus-inset" aria-label="{{ 'accessibility.close' | t }}">
+                      <svg class="icon icon-close" aria-hidden="true" focusable="false" role="presentation">
+                        <use href="#icon-close">
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </details>
+            </details-modal>
+
+            {%- if shop.customer_accounts_enabled -%}
+              <a href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}" class="header__icon header__icon--account link focus-inset{% if section.settings.menu != blank %} small-hide{% endif %}">
+                {% render 'icon-account' %}
+                <span class="visually-hidden">
+                  {%- liquid
+                    if customer
+                      echo 'customer.account_fallback' | t
+                    else
+                      echo 'customer.log_in' | t
+                    endif
+                  -%}
+                </span>
+              </a>
+            {%- endif -%}
+
+            <a href="{{ routes.cart_url }}" class="header__icon header__icon--cart link focus-inset" id="cart-icon-bubble">
+              {%- liquid
+                if cart == empty
+                  render 'icon-cart-empty'
+                else
+                  render 'icon-cart'
+                endif
+              -%}
+              <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
+              
+                <div class="cart-count-bubble">
+                  {%- if cart.item_count < 100 -%}
+                    <span aria-hidden="true">{{ cart.item_count }}</span>
+                  {%- endif -%}
+                  <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+                </div>
+              
+            </a>
+          </div> 
+          {%- endif -%}
+        </nav>          
+    </div>
+    <style>
+            li.match-with-mega-menu {
+                display: none;
+            }
+            li.ruby-menu-mega .media>:not(.zoom):not(.deferred-media__poster-button) {
+                position: inherit!important;
+                max-width: none!important; 
+                width: auto!important;
+                display: table-cell;
+            }
+           li.ruby-menu-mega .media{
+                background-color:transparent;
+            }
+            .media-left, .media-right, .media-body {
+                display: table-cell;
+                vertical-align: top;
+            }
+            .media-left, .media>.pull-left {
+                padding-right: 10px;
+            }
+            .ruby-grid .media-body a:hover{
+    			color: {{ section.settings.mega_menu_bg }};
+			}
+            .ruby-grid p.ruby-list-heading:hover,.ruby-grid .product-column:hover p.ruby-list-heading{
+              color: {{ section.settings.mega_menu_submenu_link_color }}!important;
+			}
+            .ruby-grid p.ruby-list-heading-collection:hover{
+              color: {{ section.settings.mega_menu_submenu_link_color }}!important;
+            }
+            .media-body {
+    			width: auto;
+			}
+            .media-body h4 {
+           	  margin-top: 0;
+              margin-bottom: 0;
+           	  font-weight: 600;
+              font-size: 16px;
+              color: {{ section.settings.mega_menu_submenu_link_color }};
+            }
+            .media-body p {
+               margin-bottom: 0px;
+              margin-top: 0px;
+            }
+            ul.ruby-menu svg.placeholder-svg{
+              width: 60px;
+              height: 60px;
+              border: 1px solid rgba(105,114,123,0.2);
+              margin-top: 0;
+   			  padding-top: 0;
+            }
+            .placeholder-mega-menu-image, .mega-menu-image  {
+            	max-width: 40px !important;
+            }
+            .product-column .price {
+            	text-align: center;
+                justify-content: center;
+            }
+            .product-column .price__regular {
+            	margin-left: auto;
+    			margin-right: auto;
+            }
+            .pb-20 {
+            	padding-bottom: 20px;
+            }
+            
+            {% if section.settings.logo_placement == 'center' %}
+            ul.ruby-menu ul.sub-menu li {
+                text-align: left;
+            }
+            .ruby-wrapper .medium-up--five-sixths {
+                width: 100%;
+            }
+            .ruby-menu .media-body {
+                text-align: left;
+            }
+            div.ruby-wrapper ul {
+              margin: 0 auto!important;
+              text-align: center!Important;
+              width: fit-content;
+              width: -webkit-fit-content;
+              width: -moz-fit-content;
+              width: -ms-fit-content;
+              width: -o-fit-content;
+          	}
+            @media(max-width: 749px) {
+              .site-header .grid #center-logo-layout{
+              	width: 100%;
+                align-items: center;
+    			display: flex;
+              }
+              .site-header .grid{
+              	width: 100%!important;
+              }
+              #center-logo-layout .medium-up--one-third {
+                  width: 50%!important;
+              }
+              .ruby-menu-demo-header .grid__item.medium-up--five-sixths {
+                  padding-right: 0px;
+              }
+              div.ruby-wrapper ul {
+              text-align: left!Important;
+              width: 100%;  
+          	}
+            }
+            {% endif %}
+            div#menu-drawer li.ruby-menu-mega .media .media-left{
+              width: 100px!important;
+            }
+            div#menu-drawer li.ruby-menu-mega a,div#menu-drawer li.ruby-menu-mega p a{
+              text-decoration:none!important;
+              color: rgb(var(--color-foreground));
+            }
+            div#menu-drawer li.ruby-menu-mega a:hover,div#menu-drawer li.ruby-menu-mega p a:hover,div#menu-drawer.ruby-grid .media-body a:hover{
+              color: {{ section.settings.mega_menu_bg }}!important;
+            }
+          </style>          
+    <style>
+      div.ruby-menu-header {
+        left: 0;
+        top: 0;
+        display:table;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        z-index: 2;
+        background: {{ section.settings.mega_menu_bg }};
+      }
+	  .ruby-mega-menu .price__regular, .ruby-mega-menu .price {
+    	text-align: center;
+    	width: 100%;
+	  }
+      ul.ruby-menu>li>ul>li>a{
+        color:{{ section.settings.mega_menu_submenu_link_color }}!important;
+      }
+      ul.ruby-menu>li>ul>li>a:focus, ul.ruby-menu>li>ul>li>ul>li>a:focus, ul.ruby-menu > li > ul > li > a:hover:after,ul.ruby-menu>li>ul>li>ul>li>ul>li>a:focus, ul.ruby-menu>li>ul>li>a:not([disabled]):hover, ul.ruby-menu>li>ul>li>ul>li>a:not([disabled]):hover, ul.ruby-menu>li>ul>li>ul>li>ul>li>a:not([disabled]):hover {
+        color:{{ section.settings.mega_menu_submenu_hover_link }}!important;
+        background-color:{{ section.settings.mega_menu_submenu_bg_hover }}!important;
+	  }
+      .ruby-grid.ruby-grid-lined.page-width{
+        left:0;
+        right:0;
+        margin:auto;  
+      }
+      @media(min-width: 749px) and (max-width:991px) {
+        body {
+          overflow-x: hidden
+        }
+      }
+      {% if section.settings.show_mega_menu == true %}
+      @media(min-width: 991px) {
+        .search-modal{
+         height:100%;
+         }  
+      }
+      {% endif %}
+       @media(max-width: 990px) {
+	  div.ruby-menu-header {
+          width: 100%;
+          height: auto;
+          display: none !important;
+        }
+       }
+      @media(max-width: 749px) {
+        .ruby-row .product-column {
+            padding-right: 0px!important;
+        }
+      }
+      /* theme */
+      ul.ruby-menu>li>a {
+        color: {{ section.settings.mega_menu_first_link_color }};
+      }
+
+      ul.ruby-menu>li.ruby-active-menu-item>a:hover,
+      ul.ruby-menu>li.ruby-active-menu-item:hover>a,
+      ul.ruby-menu>li>a:hover,
+      ul.ruby-menu>li:hover>a  {
+        background: {{ section.settings.mega_menu_active_bg_color }};
+      	color: {{ section.settings.mega_menu_active_color }}!important;
+      }
+	  ul.ruby-menu a.ruby-active-menu-item{
+        background: {{ section.settings.mega_menu_active_bg_color }};
+        color: {{ section.settings.mega_menu_active_color }}!important;	
+      }	
+      ul.ruby-menu a.ruby-active-menu-item span {
+        background: {{ section.settings.mega_menu_active_bg_color }};
+        color: {{ section.settings.mega_menu_active_color }}!important;
+      }
+      ul.ruby-menu>li>ul,
+      ul.ruby-menu>li>ul>li>ul,
+      ul.ruby-menu>li>ul>li>ul>li>ul {
+        border-top: 4px solid {{ section.settings.mega_menu_submenu_border_color }};
+      }
+
+      ul.ruby-menu>li>ul>li>a,
+      ul.ruby-menu>li>ul>li>ul>li>a,
+      ul.ruby-menu>li>ul>li>ul>li>ul>li>a {
+        background: {{ section.settings.mega_menu_submenu_bg_color }};
+        color: {{ section.settings.mega_menu_submenu_link_color }}
+      }
+
+      ul.ruby-menu>li>ul>li>ul>li:hover>a,
+      ul.ruby-menu>li>ul>li>ul>li>a:hover,
+      ul.ruby-menu>li>ul>li>ul>li>ul>li:hover>a,
+      ul.ruby-menu>li>ul>li>ul>li>ul>li>a:hover {
+        background: {{ section.settings.mega_menu_submenu_bg_hover }};
+      }
+      ul.ruby-menu .ruby-menu-mega a{
+      	text-decoration:none!important;
+      }
+      ul.ruby-menu .product-column span,ul.ruby-menu .product-column .price,ul.ruby-menu .product-column .price--on-sale .price-item--regular,.ruby-menu-header .product-column span,.ruby-menu-header .product-column .price span{
+        color: {{ section.settings.mega_menu_submenu_link_color }}!important;
+      }
+      ul.ruby-menu>li.ruby-menu-mega>div ul li>a {
+        color: #555
+      }
+
+      ul.ruby-menu>li.ruby-menu-mega>div ul li>a:hover {
+        color: #222
+      }
+
+      @media(max-width: 750px) {
+        ul.ruby-menu>li>a {
+          background: #efefef
+        }
+        ul.ruby-menu>li>ul>li>a,
+        ul.ruby-menu>li>ul>li>ul>li>a,
+        ul.ruby-menu>li>ul>li>ul>li>ul>li>a {
+          background: #d1d1d1
+        }
+        ul.ruby-menu>li>ul>li:hover>a,
+        ul.ruby-menu>li>ul>li>a:hover,
+        ul.ruby-menu>li>ul>li>ul>li:hover>a,
+        ul.ruby-menu>li>ul>li>ul>li>a:hover,
+        ul.ruby-menu>li>ul>li>ul>li>ul>li:hover>a,
+        ul.ruby-menu>li>ul>li>ul>li>ul>li>a:hover {
+          background: #d9d9d9;
+          color: #111
+        }
+        ul.ruby-menu>li>ul>li>ul>li>a {
+          background: #e5e5e5
+        }
+        ul.ruby-menu>li>ul>li>ul>li:hover>a,
+        ul.ruby-menu>li>ul>li>ul>li>a:hover {
+          background: #e1e1e1
+        }
+        ul.ruby-menu>li>ul>li>ul>li>ul>li>a {
+          background: #efefef
+        }
+        ul.ruby-menu>li>ul>li>ul>li>ul>li:hover>a,
+        ul.ruby-menu>li>ul>li>ul>li>ul>li>a:hover {
+          background: #fff
+        }
+        ul.ruby-menu>li>ul>li>a:before{
+          background: #555
+        }
+        ul.ruby-menu>li>ul>li>ul>li>a:before {
+          background: #777
+        }
+        ul.ruby-menu>li>ul>li>ul>li>ul>li>a:before {
+          background: #999
+        }
+        ul.ruby-menu>li.ruby-menu-mega>div{
+          border-top: none
+        }
+        ul.ruby-menu>li>ul,
+        ul.ruby-menu>li>ul>li>ul,
+        ul.ruby-menu>li>ul>li>ul>li>ul {
+          border-top: none
+        }
+      }
+
+
+      /* transision */
+
+      @media(min-width: 750px) {
+        ul.ruby-menu>li>a:after {
+        }
+        ul.ruby-menu>li>ul>li>a:after,
+        ul.ruby-menu>li>ul>li>ul>li>a:after,
+        ul.ruby-menu>li>ul>li>ul>li>ul>li>a:after {
+          
+        }
+        ul.ruby-menu>li>ul,
+        ul.ruby-menu>li>div {
+          transform: translateY(25px);
+          transition: all .05s ease
+        }
+        ul.ruby-menu>li:hover>ul,
+        ul.ruby-menu>li:hover>div {
+          transform: translateY(0)
+        }
+        ul.ruby-menu>li>ul>li>ul,
+        ul.ruby-menu>li>ul>li>ul>li>ul,
+        ul.ruby-menu>li>ul>li>ul>li>ul>li>ul {
+          transform: translateX(25px);
+          transition: all .05s ease
+        }
+        ul.ruby-menu>li>ul>li:hover>ul,
+        ul.ruby-menu>li>ul>li>ul>li:hover>ul,
+        ul.ruby-menu>li>ul>li>ul>li>ul>li:hover>ul {
+          transform: translateX(0)
+        }
+      }
+
+      /* main */
+
+      *,
+      :before,
+      :after {
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box
+      }
+
+      div.ruby-mega-menu {
+        position: relative;
+        margin: 0 auto;
+        grid-area: navigation;
+          
+      }
+      @media screen and (min-width: 990px){
+        div.ruby-mega-menu {
+            display: flex;
+            justify-content: space-between;
+            margin: 0 auto;
+        }
+      }
+	  div.ruby-mega-menu.enable-full-width {
+        position: relative;
+        max-width: 100%;
+        margin: 0 auto;
+        padding:0 55px;
+      }
+      div.ruby-mega-menu ul {
+        margin: 0;
+        padding: 0;
+        list-style: none
+      }
+
+      div.ruby-mega-menu>ul {
+        position: relative
+      }
+
+      ul.ruby-menu>li {
+        float: left;
+        font-size: 14px
+      }
+
+      ul.ruby-menu>li>a {
+        display: block;
+        line-height: 50px;
+        padding: 0 15px 0 20px;
+        color: {{ section.settings.mega_menu_first_link_color }};
+        text-decoration: none;
+        font-family:var(--font-stack-body)!important;  
+      }
+
+      ul.ruby-menu>li>a:only-child {
+        padding: 0 15px
+      }
+
+      ul.ruby-menu>li>a:hover,
+      ul.ruby-menu>li:hover>a,
+      ul.ruby-menu>li.ruby-active-menu-item>a:hover,
+      ul.ruby-menu>li.ruby-active-menu-item:hover>a {
+        background: {{ section.settings.mega_menu_active_bg_color }};
+        color: {{ section.settings.mega_menu_active_color }};
+      }
+
+      ul.ruby-menu>li>a:only-child:after,
+      ul.ruby-menu>li:hover>a:only-child:after {
+        content: '';
+        display:none;
+      }
+
+      ul.ruby-menu>li.ruby-active-menu-item>a {
+        background: {{ section.settings.mega_menu_active_bg_color }};
+      	color: {{ section.settings.mega_menu_active_color }}!important;
+      }
+
+      ul.ruby-menu>li>a .fa {
+        position: relative;
+        width: 24px
+      }
+
+      ul.ruby-menu>li>a>img {
+        max-width: 16px;
+        display: block
+      }
+      ul.ruby-menu>li a{
+        color:{{ section.settings.mega_menu_first_link_color }}!important;
+      }
+      ul.ruby-menu>li:focus a span, ul.ruby-menu>li a span:focus, ul.ruby-menu>li a:focus span, ul.ruby-menu>li:focus a, ul.ruby-menu>li.ruby-menu-mega:focus a{
+        color:{{ section.settings.mega_menu_active_color }}!important;
+      }
+      ul.ruby-menu>li.ruby-menu-mega .media-body a{
+        color: {{ section.settings.mega_menu_submenu_link_color }}!important;
+      }
+      ul.ruby-menu>li.ruby-menu-mega .media-body a:hover,ul.ruby-menu>li.ruby-menu-mega .media-body a:focus{
+        color: {{ section.settings.mega_menu_submenu_link_color }}!important;
+        opacity:.8; 
+      }
+      ul.ruby-menu>li>ul,
+      ul.ruby-menu>li>ul>li>ul,
+      ul.ruby-menu>li>ul>li>ul>li>ul {
+        position: absolute;
+        -webkit-box-shadow: 0 8px 24px -5px transparent;
+        -moz-box-shadow: 0 8px 24px -5px transparent;
+        box-shadow: 0 8px 24px -5px transparent;
+        border-top: 4px solid {{ section.settings.mega_menu_submenu_border_color }};
+      }
+
+      ul.ruby-menu>li>ul>li,
+      ul.ruby-menu>li>ul>li>ul>li {
+        position: relative
+      }
+
+      ul.ruby-menu>li>ul>li>a,
+      ul.ruby-menu>li>ul>li>ul>li>a,
+      ul.ruby-menu>li>ul>li>ul>li>ul>li>a {
+        white-space: nowrap;
+        display: block;
+        min-width: 170px;
+    	max-width: none;
+        line-height: 1.7;
+        padding: 7px 35px 7px 25px;
+        background: {{ section.settings.mega_menu_submenu_bg_color }};
+        color: {{ section.settings.mega_menu_submenu_link_color }}!important;
+        text-decoration: none;
+        font-size: 14px
+      }
+      ul.ruby-menu ul.sub-menu li:nth-last-child(1) a{
+      	 padding-bottom: 13px!important;
+      }
+	  ul.ruby-menu ul.sub-menu li a{
+          text-align: left;
+          background: {{ section.settings.mega_menu_submenu_bg_color }};
+          color: {{ section.settings.mega_menu_submenu_link_color }}!important;
+          max-height: 39px;
+      }
+      ul.ruby-menu ul.sub-menu{
+      	display: grid;
+        grid-template-columns: auto auto;
+        grid-template-rows: repeat(10, auto);
+        grid-auto-flow: column;
+        padding-top: 5px;
+        background: {{ section.settings.mega_menu_submenu_bg_color }};
+        padding-bottom: 5px;
+        padding-left: 0px;
+        padding-right: 0px;
+        list-style: none;
+      }
+      ul.ruby-menu>li>ul>li>a:only-child:after,
+      ul.ruby-menu>li>ul>li>ul>li>a:only-child:after,
+      ul.ruby-menu>li>ul>li>ul>li>ul>li>a:only-child:after {
+        content: ""
+      }
+
+      ul.ruby-menu>li>ul>li>a .fa,
+      ul.ruby-menu>li>ul>li>ul>li>a .fa,
+      ul.ruby-menu>li>ul>li>ul>li>ul>li>a .fa {
+        position: relative;
+        width: 24px
+      }
+      
+      ul.ruby-menu>li>ul>li>ul,
+      ul.ruby-menu>li>ul>li>ul>li>ul {
+        top: -4px;
+        z-index: 100
+      }
+
+      ul.ruby-menu>li.ruby-menu-mega>div {
+        position: absolute;
+        width: 100%;
+        height: auto;
+        display:table;
+        left: 0;
+        background: {{ section.settings.mega_menu_submenu_bg_color }};
+        border-top: 4px solid {{ section.settings.mega_menu_submenu_border_color }};
+        overflow: hidden;
+        -webkit-box-shadow: 0 8px 24px -5px #ccc;
+        -moz-box-shadow: 0 8px 24px -5px #ccc;
+        box-shadow: 0 8px 24px -5px #ccc
+      }
+      div.ruby-grid,
+      div.ruby-grid-lined {
+        position: relative;
+        width: 100%;
+        padding: 0;
+        margin: 0
+      }
+
+      div.ruby-grid>div.ruby-row {
+        position: relative;
+        width: 100%;
+        overflow-y: auto;
+        max-height: 450px;
+        height: auto
+      }
+
+      div.ruby-grid>div.ruby-row div.ruby-row [class^="ruby-col"] {
+        margin-top: 16px
+      }
+
+      div.ruby-grid>div.ruby-row div.ruby-row:first-of-type [class^="ruby-col"] {
+        margin-top: 0
+      }
+
+      div.ruby-grid.ruby-grid-lined>div.ruby-row:after {
+        content: "";
+        width: 100%;
+        height: 1px;
+        left: 0;
+        bottom: 0;
+        background: -webkit-linear-gradient(left, rgba(204, 204, 204, 0) 0%, rgba(204, 204, 204, 0.48) 24%, rgba(204, 204, 204, 1) 50%, rgba(204, 204, 204, 0.42) 79%, rgba(204, 204, 204, 0) 100%)
+      }
+
+      div.ruby-grid.ruby-grid-lined>div.ruby-row:last-child:after {
+        height: 0
+      }
+
+      div.ruby-grid>div.ruby-row::after {
+        content: "";
+        display: table;
+        clear: both
+      }
+
+      div.ruby-grid>div.ruby-row [class^="ruby-col"] {
+        position: relative;
+        float: left;
+        height: auto
+      }
+
+      div.ruby-grid>div.ruby-row>[class^="ruby-col"] {
+        padding: 15px
+      }
+
+      div.ruby-grid>div.ruby-row>[class^="ruby-col"] [class^="ruby-col"] {
+        padding-left: 10px
+      }
+
+      /*div.ruby-grid>div.ruby-row>[class^="ruby-col"] [class^="ruby-col"]:first-of-type {
+        padding-left: 0
+      }*/
+	  .collection-container {
+          width: 100%;
+          height:150px;
+          background-position: center;
+          background-size: cover;
+          background-repeat: no-repeat;
+      }	
+      div.ruby-grid>div.ruby-row div.ruby-col-1 {
+        width: 8.33%
+      }
+
+      div.ruby-grid>div.ruby-row div.ruby-col-2 {
+        width: 16.66%
+      }
+
+      div.ruby-grid>div.ruby-row div.ruby-col-3 {
+        width: 25%
+      }
+
+      div.ruby-grid>div.ruby-row div.ruby-col-4 {
+        width: 33.33%
+      }
+
+      div.ruby-grid>div.ruby-row div.ruby-col-5 {
+        width: 41.66%
+      }
+
+      div.ruby-grid>div.ruby-row div.ruby-col-6 {
+        width: 50%
+      }
+
+      div.ruby-grid>div.ruby-row div.ruby-col-7 {
+        width: 58.33%
+      }
+
+      div.ruby-grid>div.ruby-row div.ruby-col-8 {
+        width: 66.66%
+      }
+
+      div.ruby-grid>div.ruby-row div.ruby-col-9 {
+        width: 75%
+      }
+
+      div.ruby-grid>div.ruby-row div.ruby-col-10 {
+        width: 83.33%
+      }
+
+      div.ruby-grid>div.ruby-row div.ruby-col-11 {
+        width: 91.66%
+      }
+
+      div.ruby-grid>div.ruby-row div.ruby-col-12 {
+        width: 100%
+      }
+
+      div.ruby-grid.ruby-grid-lined>div.ruby-row>div[class^="ruby-col"]:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        width: 1px;
+        height: 100%;
+        right: 0;
+        background: -webkit-linear-gradient(top, rgba(204, 204, 204, 0) 0%, rgba(204, 204, 204, 0.48) 24%, rgba(204, 204, 204, 1) 50%, rgba(204, 204, 204, 0.42) 79%, rgba(204, 204, 204, 0) 100%)
+      }
+
+      div.ruby-grid.ruby-grid-lined>div.ruby-row>div[class^="ruby-col"]:last-child:after {
+        width: 0
+      }
+
+      div.ruby-grid img {
+        position: relative;
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+        width:auto;
+      }
+      
+	  /*div.ruby-grid .product-column img {
+        max-width: 215px;
+      }*/
+      
+      p.ruby-list-heading,p.ruby-list-heading-collection {
+        line-height: 24px;
+        font-weight: 700;
+        margin: 10px 0!important;
+        text-align: center;
+        min-height: 25px;
+        width:100%;
+       color: {{ section.settings.mega_menu_submenu_link_color }};
+      }
+	  a.collection-product-link {
+          display: flex;
+          flex-direction: column;
+      }
+      p.ruby-list-heading.h4 {
+          flex: 1;
+      }	
+      ul.ruby-menu>li.ruby-menu-mega>div ul {
+        margin: 0;
+        margin-top: 10px
+      }
+
+      ul.ruby-menu>li.ruby-menu-mega>div ul li {
+        position: relative;
+        font-size: 14px;
+        line-height: 28px;
+        display: block;
+        width: 100%
+      }
+
+      ul.ruby-menu>li.ruby-menu-mega>div ul li>a {
+        text-decoration: none;
+        color: #555;
+        display: inline-block
+      }
+
+      ul.ruby-menu>li.ruby-menu-mega>div ul li>a:hover {
+        color: #222;
+        text-decoration: underline
+      }
+
+      ul.ruby-menu>li.ruby-menu-mega>div ul li .fa {
+        position: relative;
+        width: 24px
+      }
+
+      ul.ruby-menu>li.ruby-menu-mega>div ul li>a>img {
+        float: left;
+        width: 60px;
+        margin-right: 12px
+      }
+      .ruby-col-5 .ruby-row {
+        display: flex;
+      }
+      /*.ruby-col-6.product-column{
+        flex: 1;
+        padding-bottom:80px;
+      }
+      .ruby-col-6.product-column .price {
+        position: absolute;
+        bottom: 0;
+      }*/
+      @media(max-width: 1150px) {
+        .ruby-col-6.product-column .price{
+    	  font-size: 14px;
+        }
+      }
+      @media(max-width: 1040px) {
+        .ruby-col-6.product-column .price{
+    	  font-size: 13px;
+        }
+      }
+      @media(min-width: 750px) {
+        div.ruby-mega-menu.ruby-menu-full-width {
+          width: 100%
+        }
+        div.ruby-mega-menu.ruby-menu-full-width>ul.ruby-menu {
+          width: 980px;
+          margin: 0 auto
+        }
+        ul.ruby-menu>li>ul,
+        ul.ruby-menu>li>ul>li>ul,
+        ul.ruby-menu>li>ul>li>ul>li>ul {
+          visibility: hidden;
+          opacity: 0
+        }
+        ul.ruby-menu>li:hover>ul,
+        ul.ruby-menu>li>ul>li:hover>ul,
+        ul.ruby-menu>li>ul>li>ul>li:hover>ul {
+          visibility: visible;
+          opacity: 1;
+          z-index:99
+        }
+        ul.ruby-menu>li.ruby-menu-mega>div {
+          visibility: hidden;
+          opacity: 0
+        }
+        ul.ruby-menu>li.ruby-menu-mega:hover>div {
+          visibility: visible;
+          opacity: 1
+        }
+        ul.ruby-menu>li>a:after {
+          font-family: "Font Awesome 5 Free";
+          text-decoration: none;
+          content: '\f107';
+          /*position: absolute;*/
+          margin-left: 5px;
+          margin-right: 5px;
+          top: 0;
+          font-weight: 600;
+          line-height:0;
+        }
+        ul.ruby-menu>li:hover>a:after {
+          -webkit-transform: rotate(-180deg);
+          -moz-transform: rotate(-180deg);
+          -o-transform: rotate(-180deg);
+          -ms-transform: rotate(-180deg);
+          transform: rotate(-180deg);
+          /*transition: all .3s ease;*/
+        }
+        ul.ruby-menu>li>ul>li>a:after,
+        ul.ruby-menu>li>ul>li>ul>li>a:after,
+        ul.ruby-menu>li>ul>li>ul>li>ul>li>a:after {
+          font-family: "Font Awesome 5 Free";
+          text-decoration: none;
+          font-size: 14px;
+          font-weight: 600;
+          padding: 0;
+          content: '\276F';
+          position: absolute;
+          right: 15px;
+          line-height: 1.8;
+        }
+        ul.ruby-menu>li>ul>li:hover>a:after,
+        ul.ruby-menu>li>ul>li>ul>li:hover>a:after,
+        ul.ruby-menu>li>ul>li>ul>li>ul>li:hover>a:after {
+          -webkit-transform: rotate(-180deg);
+          -moz-transform: rotate(-180deg);
+          -o-transform: rotate(-180deg);
+          -ms-transform: rotate(-180deg);
+          transform: rotate(-180deg);
+          /*transition: all .3s ease;*/
+        }
+      }
+
+
+      /* responsive */
+
+      @media(max-width: 990px) {
+        .ruby-grid.ruby-grid-lined {
+            display: none!Important;
+        }
+        .ruby-grid.ruby-grid-lined.show{
+            display: block!Important;
+        }
+        .ruby-mega-menu .grid__item {
+            padding-right: 0!important;
+         }
+        .ruby-row.collections img {
+            width: 100%!important;
+        }
+        .ruby-col-6.product-column img, .ruby-col-3.product-column img {
+            width: 100%!important;
+        }
+        ul.ruby-menu > li > ul.sub-menu {
+            display: none!Important;
+        }
+        ul.ruby-menu > li > ul.sub-menu.show {
+            display: block!Important;
+        }
+        div.ruby-mega-menu {
+          position: absolute;
+          width: 100%;
+          top: 0;
+        }
+        div.ruby-mega-menu>ul {
+          position: absolute;
+          top: 0px;
+          width: 100%;
+        }
+        
+        ul.ruby-menu>li>a {
+          padding: 0 15px;
+          background: {{ section.settings.mega_menu_bg }};
+        }
+        ul.ruby-menu>li>a:only-child {
+          padding: 0 15px
+        }
+        ul.ruby-menu>li>ul,
+        ul.ruby-menu>li>ul>li>ul,
+        ul.ruby-menu>li>ul>li>ul>li>ul {
+          position: relative;
+          width: 100%;
+          -webkit-box-shadow: none;
+          -moz-box-shadow: none;
+          box-shadow: none;
+          border-top: none
+        }
+        ul.ruby-menu>li,
+        ul.ruby-menu>li>ul>li,
+        ul.ruby-menu>li>ul>li>ul>li,
+        ul.ruby-menu>li>ul>li>ul>li>ul>li {
+          position: relative
+        }
+        ul.ruby-menu>li>ul>li>a,
+        ul.ruby-menu>li>ul>li>ul>li>a,
+        ul.ruby-menu>li>ul>li>ul>li>ul>li>a {
+          width: 100%;
+          line-height: 50px;
+          padding: 0 20px;
+          background: #d1d1d1;
+          color: #000;
+        }
+        ul.ruby-menu>li>ul>li>ul,
+        ul.ruby-menu>li>ul>li>ul>li>ul {
+          left: auto;
+          top: auto;
+          z-index: auto
+        }
+        ul.ruby-menu>li>ul>li>ul>li>a {
+          background: #e5e5e5;
+          padding: 0 25px;
+          color: #000;
+        }
+        ul.ruby-menu>li>ul>li>ul>li:hover>a,
+        ul.ruby-menu>li>ul>li>ul>li>a:hover {
+          background: #e1e1e1
+        }
+        ul.ruby-menu>li>ul>li>ul>li>ul>li>a {
+          background: #efefef;
+          padding: 0 110px
+        }
+        ul.ruby-menu>li>ul>li>ul>li>ul>li:hover>a,
+        ul.ruby-menu>li>ul>li>ul>li>ul>li>a:hover {
+          background: #fff
+        }
+        ul.ruby-menu>li.ruby-menu-mega {
+          position: relative
+        }
+        ul.ruby-menu>li.ruby-menu-mega>div {
+          position: relative;
+          top: auto;
+          left: auto;
+          border-top: none;
+          -webkit-box-shadow: none;
+          -moz-box-shadow: none;
+          box-shadow: none
+        }
+        
+        ul.ruby-menu>li>ul>li>a:before {
+          background: #555
+        }
+        ul.ruby-menu>li>ul>li>ul>li>a:before {
+          background: #777
+        }
+        ul.ruby-menu>li>ul>li>ul>li>ul>li>a:before {
+          background: #999
+        }
+        div.ruby-grid>div.ruby-row div.ruby-row [class^="ruby-col"] {
+          margin-top: 0
+        }
+        div.ruby-grid>div.ruby-row div.ruby-row:first-of-type [class^="ruby-col"] {
+          margin-top: 0
+        }
+        div.ruby-grid.ruby-grid-lined>div.ruby-row:after {
+          height: 0
+        }
+        div.ruby-grid>div.ruby-row>[class^="ruby-col"] {
+          padding: 0
+        }
+        div.ruby-grid>div.ruby-row>[class^="ruby-col"] [class^="ruby-col"] {
+          padding-left: 0;
+           padding-right: 0
+        }
+        div.ruby-grid>div.ruby-row div.ruby-col-1,
+        div.ruby-grid>div.ruby-row div.ruby-col-2,
+        div.ruby-grid>div.ruby-row div.ruby-col-3,
+        div.ruby-grid>div.ruby-row div.ruby-col-4,
+        div.ruby-grid>div.ruby-row div.ruby-col-5,
+        div.ruby-grid>div.ruby-row div.ruby-col-6,
+        div.ruby-grid>div.ruby-row div.ruby-col-7,
+        div.ruby-grid>div.ruby-row div.ruby-col-8,
+        div.ruby-grid>div.ruby-row div.ruby-col-9,
+        div.ruby-grid>div.ruby-row div.ruby-col-10,
+        div.ruby-grid>div.ruby-row div.ruby-col-11,
+        div.ruby-grid>div.ruby-row div.ruby-col-12 {
+          width: 100%;
+          padding: 20px 30px
+        }
+        div.ruby-grid.ruby-grid-lined>div.ruby-row>div[class^="ruby-col"]:after {
+          width: 0
+        }
+        div.ruby-grid img {
+          position: relative;
+          max-width: 100%;
+          height: auto;
+          display: block;
+        }
+        div.ruby-grid>div.ruby-row::after {
+          content: "";
+          display: table;
+          clear: both
+        }
+      }
+
+      @media(min-width: 750px) and (max-width:991px) {
+        div.ruby-mega-menu {
+          width: 100%
+        }
+        div.ruby-grid>div.ruby-row div.ruby-col-3-md {
+          width: 25%
+        }
+        div.ruby-grid>div.ruby-row div.ruby-col-4-md {
+          width: 33.33%
+        }
+        div.ruby-grid>div.ruby-row div.ruby-col-6-md {
+          width: 50%
+        }
+        div.ruby-grid>div.ruby-row div.ruby-col-12-md {
+          width: 100%
+        }
+        div.ruby-grid.ruby-grid-lined>div.ruby-row:after,
+        div.ruby-grid.ruby-grid-lined>div.ruby-row>div[class^="ruby-col"]:after {
+          background: none
+        }
+      }
+      @media only screen and (min-width: 750px){
+      .medium-up--five-sixths {
+          width: 83.33333%;
+          float: left;
+      }
+      .medium-up--one-sixth {
+          width: 16.66667%;
+          float: left;
+      } 
+      }
+    </style>
+    <script>
+      setInterval(function() {
+      	$(document).ready(function() {
+           var menuWidth = $('ul.ruby-menu>li>ul').outerWidth();
+           var totalmenuWidth = menuWidth;
+           $('ul.ruby-menu>li>ul>li>ul').css('left',totalmenuWidth); 
+           
+           var megamenuColHeight = $('.collection-container').outerWidth();
+           $('.collection-container').css('height',megamenuColHeight);
+        });
+      },0);
+    </script>   
+    <script> 
+      $( "ul.ruby-menu li.ruby-menu-mega" ).insertAfter( "li.home-menu" );
+    </script>
+    
+    <script>
+      $(document).ready(function(){
+        $('.collection-container').each(function(){
+           var hh = $('p.ruby-list-heading-collection').height();
+           $('p.ruby-list-heading-collection').css('height',hh);
+        });
+        
+        $('.product-column').each(function(){
+           var h = $('p.ruby-list-heading').height();
+           $('p.ruby-list-heading').css('height',h);
+        });
+      }); 
+    </script>  
+{% endif %}

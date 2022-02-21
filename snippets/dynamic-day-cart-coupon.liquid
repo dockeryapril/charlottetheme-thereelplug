@@ -1,0 +1,11 @@
+{% if section.settings.enable_ddcc or section.settings.ddcc_discount_code != blank %}
+  <div class="ddcc-container">
+      <p style="color:{{ section.settings.ddcc_color }};">Use Code {{ section.settings.ddcc_discount_code }} to save {{ section.settings.ddcc_percent }}% <span id="day-today">loading..</span> only!
+  </div>
+{% endif %}
+<script>
+  var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  var date = new Date();
+  var date_today = weekday[date.getDay()];
+  document.getElementById("day-today").innerHTML = date_today;
+</script>

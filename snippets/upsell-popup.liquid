@@ -1,0 +1,261 @@
+{% if section.settings.upsell_popup_enable %} 
+ {% for tag in product.tags %}
+  {% if tag == "upsell-enable" %}
+	<div id="upsell-popup" class="clock-popup" data-backdrop="static" data-keyboard="false" style="opacity:0;visibility:hidden;">
+       <div class="clock-popup-inner">
+        <button title="Close (Esc)" type="button" class="close-upsell close" onclick="document.getElementById('upsell-popup').style.display='none'">&times;</button>
+        <input type="checkbox" id="dont-show-again" name="dont-show-again" checked style="display:none;"/>
+         {% if section.settings.special_offer != blank %}
+              <img src="{{ section.settings.special_offer | img_url: '150x150' }}" class="modal--offer-image" alt="Offer" />
+          {% else %}
+              <img src="{{ 'special_offer.png' | asset_url }}" alt="Offer" class="modal--offer-image" />
+          {% endif %}
+         <div class="modal-body">
+            <img src="{{ all_products[section.settings.free_product].images.first | img_url: 'compact' }}" alt="{{ all_products[section.settings.free_product].images.first.alt | escape }}" class="modal--free-image" />
+            <h4 class="upsell-heading">{{ section.settings.upsell_headline_text }}</h4>
+            <div class="upsell-bottom">
+              <button type="button" class="button btn-default upsell-yes-btn">{{ section.settings.yes_button_text }}</button>
+              <button type="button" class="btn btn-default upsell-no-btn">{{ section.settings.no_button_text }}</button>
+            </div>
+          </div>
+       </div>
+      </div>
+	<script>
+      setTimeout(function() {
+        var free_id = "";
+      
+        {% for variant in all_products[section.settings.free_product].variants %}
+              {% if variant == all_products[section.settings.free_product].selected_or_first_available_variant %}
+                free_id = {{variant.id}};
+              {% endif %}
+        {% endfor %}
+
+        if(free_id !== "") {
+          var op=setTimeout(openPopUp,3000);
+            function openPopUp() {
+              $("#upsell-popup").css("visibility","visible");
+              $("#upsell-popup").css("opacity","1"); 
+              $(window).scrollTop(0);
+           }
+        }
+        else{
+          var hp=setTimeout(hidePopUp,1000);
+            function hidePopUp() {
+              $("#upsell-popup").css("visibility","hidden");
+              $("#upsell-popup").css("opacity","0"); 
+              $(window).scrollTop(0);
+            }
+       }
+      });  
+      
+      $('#upsell-popup .close-upsell').click(function(e){
+        $('#upsell-popup').removeClass("in");
+        $("body.template-product").css("overflow","auto");
+      });
+  
+      $('#upsell-popup .upsell-yes-btn').click(function(e){
+        e.preventDefault();
+          $('#upsell-popup').removeClass("in");
+          $(".close-upsell").click();
+        
+        $("#Quantity-{{ section.id }}").val({{ section.settings.quantity_upsell }});
+        
+        var product_free_id = "";
+        var cart_product_item = "";
+        var cart_product_qty = "";
+        
+        {%- for item in cart.items -%} 
+			{%- if item.product.title == product.title -%} 
+				cart_product_qty = "{{ item.quantity }}";
+                cart_product_item = "{{ item.product.title }}";
+            {% endif %}  
+		{% endfor %} 
+             
+        {% for variant in all_products[section.settings.free_product].variants %}
+            {% if variant == all_products[section.settings.free_product].selected_or_first_available_variant %}
+              product_free_id = {{variant.id}};
+            {% endif %}
+        {% endfor %}
+        	
+		var stock = "{{ product.variants.first.inventory_quantity }}";
+        var upsell_qty = "{{ section.settings.quantity_upsell }}";
+        var total_stocks =  stock - cart_product_qty;      
+        
+        
+        if(product_free_id !== "") {
+          if(total_stocks >= upsell_qty){
+            var data = 'id='+ product_free_id + '&quantity=1';
+            $.ajax({
+              type: 'POST',
+              url: '/cart/add.json',
+              dataType: 'json',
+              data: data,
+              success: function(cart){
+                setTimeout(function(){
+                  $(".product-form__submit").click(); 
+                }, 1000);
+              }
+            });
+          }
+          else{
+            var data = 'id='+ product_free_id + '&quantity=0';
+            $.ajax({
+              type: 'POST',
+              url: '/cart/add.json',
+              dataType: 'json',
+              data: data,
+              success: function(cart){
+                setTimeout(function(){
+                  $(".product-form__submit").click(); 
+                }, 1000);
+              }
+            });
+          }
+        }
+        else {
+          setTimeout(function() {
+          $('#upsell-popup').css("visibility","hidden");
+          $('#upsell-popup').css("opacity","0");
+          },1000);  
+        }
+      });
+  
+      $('#upsell-popup .upsell-no-btn').click(function(e){
+          e.preventDefault();
+          $(".product-form__submit").click();  
+          element = document.getElementById("upsell-popup");
+          element.style.visibility = "hidden";
+          element.style.opacity = "0";
+          $(".close-upsell").click(); 
+        });
+  </script>
+  <script>
+    //local storage
+
+    //store local storage in a variable
+    var showStatusStorage = sessionStorage;
+    //test to see if local storage is already set on page load
+    if (!showStatusStorage.getItem("showStatus")) {
+      showStatusStorage.setItem("showStatus", "ShowUpsellPopup");
+    }
+    updateLocalStorageTextField();
+
+    //show the alert IF the user hasn't expressly checked the 'dont show again' checkbox on a previous visit
+    if (showStatusStorage.getItem("showStatus") === "ShowUpsellPopup") {
+       $("#upsell-popup").removeClass("hide");
+    }
+    if (showStatusStorage.getItem("showStatus") === "DontShowUpsellPopup") {
+       $("#upsell-popup").addClass("hide");
+       $("#shopify-section-header").addClass("upsell-disabled");
+    }
+
+    function closeAlert() {
+      $(this).closest("#upsell-popup").addClass("hide");
+      if ($("#dont-show-again").is(":checked")) {
+        showStatusStorage.setItem("showStatus", "DontShowUpsellPopup");
+      }
+      updateLocalStorageTextField();
+    }
+    $(".close-upsell").on("click", closeAlert);
+
+    function updateLocalStorageTextField() {
+      $(".local-storage-value").text(showStatusStorage.getItem("showStatus"));
+    }
+    //clear after 12hours
+       //setTimeout(function(){
+           //showStatusStorage.clear();
+      //}, 43200000);
+  </script> 
+  <style>
+    #upsell-popup.clock-popup {
+      position: fixed;
+      top: 0;
+      display: grid;
+      align-content: center;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.7);
+      transition: opacity 0ms;
+      visibility: hidden;
+      opacity: 0;
+      width:100%;
+      max-width:none!important;
+      z-index: 99999999;
+    }
+    #upsell-popup .clock-popup-inner {
+      margin: 6em auto 5em auto;
+      padding: 3em 2em;
+      background-color: {{ settings.entry_bgcolor }};
+      border-radius: 5px;
+      width: 400px;
+      position: relative;
+      transition: all .3s ease-in-out;
+    }
+    .upsell-bottom button {
+      margin: 5px 0;
+      width: 100%;
+      cursor:pointer;
+      outline:none!important;
+    }
+    button.btn.btn-default.upsell-no-btn {
+      background-color: transparent;
+      text-transform: none;
+      color: {{settings.color_body_text}};
+      font-size: 13px;
+      border:none;
+      cursor:pointer;
+      outline:none!important;
+    }
+    h4.upsell-heading {
+      font-weight: 600;
+    }
+    img.modal--offer-image {
+      position: absolute;
+      left: -3em;
+      top: -3em;
+    }
+    #upsell-popup .clock-popup-inner h2 span{
+      color:{{settings.exit_heading_color_text}}!important;
+    }
+    #upsell-popup .clock-popup-inner .ptag{
+      margin: 20px auto!important; 
+    }
+    #upsell-popup .clock-popup-inner h2 {
+      margin-top: 0;
+      color:{{settings.exit_heading_color_text}}!important;
+      letter-spacing:0px!important;
+    }
+    #upsell-popup .clock-popup-inner .close {position: absolute;top: 20px;right: 30px;transition: all 200ms;font-size: 30px;font-weight: bold;text-decoration: none;color: #333;padding: 0;cursor: pointer;background-color: transparent!important;border: 0;opacity:.2;-webkit-appearance: none;}
+	#upsell-popup .clock-popup-inner .close:hover {opacity:.5;}
+    #upsell-popup .clock-popup-inner .content {
+      max-height: 30%;
+      overflow: auto;
+    }
+    #upsell-popup.disabled {
+      display: none !important;
+    }
+    body.upsell-disabled {
+      overflow: auto;
+    }
+    #shopify-section-header.upsell-disabled {
+      z-index: 999 !important;
+    }
+    #shopify-section-header.enable-image-popup {
+      z-index: 0 !important;
+    }    
+    @media screen and (max-width: 1080px) and (min-width:900px){
+      #upsell-popup .clock-popup-inner{
+          width: 60%!important;
+      }
+    }
+    @media screen and (max-width: 900px){
+      #upsell-popup .clock-popup-inner{
+          width: 95%!important;
+        margin-left: 2.2em;
+      }
+    }
+  </style>
+    {%  endif %}
+  {% endfor %}
+{% endif %}

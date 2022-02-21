@@ -1,0 +1,50 @@
+<script>
+    var startTime = new Date();
+    var countDownDate = new Date(startTime.getFullYear()+"/"+(startTime.getMonth()+1)+"/"+startTime.getDate()+' {{section.settings.delivery_cutoff}}');
+    
+    var day = new Array(7);
+      day[0] = "SUN";
+      day[1] = "MON";
+      day[2] = "TUE";
+      day[3] = "WED";
+      day[4] = "THU";
+      day[5] = "FRI";
+      day[6] = "SAT";
+    var dayToday = day[startTime.getDay()];
+
+  	var array = jQuery('#excludeDays').val().split(" ");
+    
+    for (i=0;i<array.length;i++){
+      if( dayToday==array[0] || dayToday==array[1] || dayToday==array[2] || dayToday==array[3] || dayToday==array[4] || dayToday==array[5] || dayToday==array[6] ){
+          jQuery("#estimater").hide();
+      } 
+      else {
+         jQuery("#estimater").show();
+      }
+  	}
+  
+    if(countDownDate >= 0){
+      var satartTime=countDownDate.setDate(countDownDate.getDate()+1);
+    }                          
+                                 
+    setInterval(function() {
+      var today = new Date();
+      var now = new Date().getTime();
+
+      var distance = countDownDate - now; 
+
+      // Time calculations for days, hours, minutes and seconds
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));    
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);  
+
+      // Output the result in an element with id="demo 
+      document.getElementById("estimateTimer").innerHTML = hours + " hours " + minutes + " minutes ";
+      },1000);
+  
+</script>
+
+<style>
+    .estimater{font-weight:600; font-size:16px;}
+    .estimate-timer--time{color:{{section.settings.delivery_color_text}}!important;}
+</style>

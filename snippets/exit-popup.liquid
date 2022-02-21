@@ -1,0 +1,52 @@
+<div id="exit-popup">
+  <div id="dy-popup-1" class="clock-popup-inner">
+    <div class="dy-popup-close"> </div>
+    <div class="dy-popup-col">
+      <h2 style="color: {{settings.exit_heading_color_text}};"><span>{{settings.exitpopup_heading}}</span></h2>
+      <p class="ptag">{{settings.exitpopup_text}}</p>
+      <div id="countdown-exit">{% include 'popup_countdown' %}</div>
+      {% if cart.item_count > 0 %}
+      <form action="/cart" method="post" novalidate  >
+        <input type="hidden" name="discount" value="{{settings.discountcode}}">    
+        <div class="popup_newsletter">
+          <button class="button btncookie" type="submit"  name="checkout">APPLY COUPON INSTANTLY</button>
+        </div>
+      </form>
+      {% else%}
+      <a style="margin-top:20px;" class="button btncookie" type="submit"  href="/collections/all/" name="checkout">SHOP NOW</a>
+      {% endif %}
+     <p style="margin-top: 14px;">OR</p>
+      <p style="margin-top:-10px;">Enter promo code <span style="
+        color: {{ settings.exit_sale_color_text }};
+        font-weight: bold;
+        border-bottom: 2px dotted;
+        ">{{settings.discountcode}}</span> at the CHECKOUT</p>
+        <a class="dy-popup-optout">No thanks</a>
+    </div>
+  </div>
+</div>
+<script>
+   $('#countdown-exit').ClassyCountdown({
+        end: $.now() + {{settings.exit_timer}} // end time
+    });  
+</script>
+  
+<script>
+// Close button and opt out link functionality
+$("#dy-popup-1 .dy-popup-close, #dy-popup-1 .dy-popup-optout").click(function(){
+  $("#exit-popup").remove();
+  $("body").css('overflow', 'auto');
+});
+
+// Show on exit intent after 5 second delay
+setTimeout(() => {
+  $(document).on("mouseout", evt => {
+    if(evt.toElement === null && evt.relatedTarget === null) {
+      $(evt.currentTarget).off("mouseout");
+      $("#exit-popup").css('display', 'flex');
+      $(window).scrollTop(0);
+    }
+  });
+},{{ settings.exit_popup_seconds }});
+</script>
+

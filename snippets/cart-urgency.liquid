@@ -1,0 +1,38 @@
+<div class="cart-timer-container">
+	<p class="cart-timer" id="cart-timer" style="background:{{ section.settings.cart_urgency_bg }};">
+	  <span class="cart-timer--text" style="color: {{ section.settings.cart_urgency_headline_color }};">{{ section.settings.cart_urgency_text }}
+	  <span id="cartTimer" class="cart-timer--time" style="color: {{ section.settings.cart_urgency_timer_color }};">00:00</span> minutes! </span>
+	</p>
+</div>
+<script>
+	// Set the date we're counting down to
+	var timer_settings = {{ section.settings.cart_urgency_timer }};
+	var currentDate = new Date();
+	var countDownDate = new Date(currentDate.getTime() + (timer_settings * 60 * 1000));
+
+	// Update the count down every 1 second
+	var x = setInterval(function() {
+
+	  // Get today's date and time
+	  var now = new Date().getTime();
+
+	  // Find the distance between now and the count down date
+	  var distance = countDownDate - now;
+
+	  // Time calculations for days, hours, minutes and seconds
+	  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+	  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+	  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+	  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+	  // Output the result in an element with id="demo"
+	  document.getElementById("cartTimer").innerHTML = ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2);
+
+	  // If the count down is over, write some text 
+	  if (distance < 0) {
+	    clearInterval(x);
+	    document.getElementById("cart-timer").innerHTML = "<b>EXPIRED</b>";
+	    window.location.href = '/cart/clear';
+	  }
+	}, 1000);
+</script>
