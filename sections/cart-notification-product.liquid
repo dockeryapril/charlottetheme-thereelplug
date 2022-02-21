@@ -1,0 +1,108 @@
+{%- if settings.atc_cart_style == "popup" -%}
+{%- if cart != empty -%}
+  {%- for item in cart.items -%}
+    <div id="cart-notification-product-{{ item.id }}">
+    <div class="cart-popup-wrapper">
+      <div class="cart-popup" data-cart-popup tabindex="-1">
+        <div class="cart-popup-item">
+          <ul class="cart-popup-ul-middle">
+            {% for item in cart.items %}
+            <li>
+              <a href="{{ item.url | within: collections.all }}">
+                <div class="cart-img-div">
+                  <img src="{{ item | img_url: 'small' }}" alt="Image of {{ item.title | escape }}" class="cart-item-image" />
+                  <span class="pop-qty-crat" value={{ item.quantity }}>{{ item.quantity }}</span>
+                </div>
+                <div class="cart-item-info">
+                  <span class="cart-item-title">
+                    {{ item.product.title }}{% if item.product.variants.size > 1 %} - {{ item.variant.title }}{% endif %}
+                  </span>
+                  <p class="cart-item-price">
+                    <span class="money">{{ item.price | times: item.quantity | money }}</span>
+                  </p>
+                </div>
+              </a>
+              <a data-no-instant href="/cart/change?line={{ forloop.index }}&quantity=0" data-line="{{ forloop.index }}" data-variant="{{ item.variant.id }}" class="removeLineCartPop" id="removeItemFromCart" rel="{{ line_item.variant.id }}"><i class="far fa-times-circle" aria-hidden="true"></i></a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+  	</div>
+  </div>
+  {%- endfor -%}
+ {%- endif -%}
+{%- endif -%}
+{%- if settings.atc_cart_style == "popup_modal" -%}
+{%- if cart != empty -%}
+  {%- for item in cart.items -%}
+   <div id="cart-notification-product-{{ item.id }}">
+    <div class="cart-popup-wrapper">
+      <div class="cart-popup" data-cart-popup tabindex="-1">
+        <div class="cart-popup-item">
+          <ul class="cart-popup-ul-middle">
+            {% for item in cart.items %}
+            <li>
+              <a href="{{ item.url | within: collections.all }}">
+                <div class="cart-img-div">
+                  <img src="{{ item | img_url: 'small' }}" alt="Image of {{ item.title | escape }}" class="cart-item-image" />
+                  <span class="pop-qty-crat" value={{ item.quantity }}>{{ item.quantity }}</span>
+                </div>
+                <div class="cart-item-info">
+                  <span class="cart-item-title">
+                    {{ item.product.title }}{% if item.product.variants.size > 1 %} - {{ item.variant.title }}{% endif %}
+                  </span>
+                  <p class="cart-item-price">
+                    <span class="money">{{ item.price | times: item.quantity | money }}</span>
+                  </p>
+                </div>
+              </a>
+              <a data-no-instant href="/cart/change?line={{ forloop.index }}&quantity=0" data-line="{{ forloop.index }}" data-variant="{{ item.variant.id }}" class="removeLineCartPop" id="removeItemFromCart" rel="{{ line_item.variant.id }}"><i class="far fa-times-circle" aria-hidden="true"></i></a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+  	</div>
+  </div>
+  {%- endfor -%}
+ {%- endif -%}
+{%- endif -%}
+
+{%- if settings.atc_cart_style == "slide" -%}
+{%- if cart != empty -%}
+  {%- for item in cart.items -%}
+   <div id="cart-notification-product-{{ item.id }}">
+    <div class="cart-popup-wrapper">
+      <div class="cart-popup" data-cart-popup tabindex="-1">
+        <div class="cart-popup-item">
+          <ul class="cart-popup-ul-middle">
+            {% for item in cart.items %}
+            <li>
+              <a href="{{ item.url | within: collections.all }}">
+                <div class="cart-img-div">
+                  <img src="{{ item | img_url: 'small' }}" alt="Image of {{ item.title | escape }}" class="cart-item-image" />
+                  <span class="pop-qty-crat" value={{ item.quantity }}>{{ item.quantity }}</span>
+                </div>
+                <div class="cart-item-info">
+                  <span class="cart-item-title">
+                    {{ item.product.title }}{% if item.product.variants.size > 1 %} - {{ item.variant.title }}{% endif %}
+                  </span>
+                  <p class="cart-item-price">
+                    <span class="money">{{ item.price | times: item.quantity | money }}</span>
+                  </p>
+                </div>
+              </a>
+              <a data-no-instant href="/cart/change?line={{ forloop.index }}&quantity=0" data-line="{{ forloop.index }}" data-variant="{{ item.variant.id }}" class="removeLineCartPop" id="removeItemFromCart" rel="{{ line_item.variant.id }}"><i class="far fa-times-circle" aria-hidden="true"></i></a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+  	</div>
+  </div>
+  {%- endfor -%}
+ {%- endif -%}
+{%- endif -%}
+
+

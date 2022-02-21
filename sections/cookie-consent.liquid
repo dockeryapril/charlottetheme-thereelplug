@@ -1,0 +1,211 @@
+<!-- ShopifyExplorer - Add an EU cookies banner to your website without app -->
+<!-- Details in: http://easycodeguide.com/shopify-add-eu-cookies-banner-website-without-app.html -->
+{% comment %}Define variables{% endcomment %}
+{% assign text = "We use cookies to ensure that we give you the best experience on our website. If you continue we'll assume that you are understand this." %}
+{% assign more_info = "Privacy Policy" %}
+{% assign privacy_url = "https://yourdomain.com/privacy-policy" %}
+{% assign button_text = "Accept" %}
+
+<style type="text/css">
+    @-webkit-keyframes slideUp{
+        0%{
+            -webkit-transform:translateY(66px);
+            transform:translateY(66px)
+        }
+        100%{
+            -webkit-transform:translateY(0);
+            transform:translateY(0)
+        }
+    }
+    @keyframes slideUp{
+        0%{
+            -webkit-transform:translateY(66px);
+            -ms-transform:translateY(66px);
+            transform:translateY(66px)
+        }
+        100%{
+            -webkit-transform:translateY(0);
+            -ms-transform:translateY(0);
+            transform:translateY(0)
+        }
+    }
+    #se-cookies-message {
+        color: #000; /* Change text color here */
+        background-color: #fff; /* Change background color here */
+        padding: 10px;
+        text-align: center;
+        position: fixed;
+        bottom:0px;
+        left:0;
+        right:0;
+        z-index: 100000;
+        box-shadow: 0 0 5px rgba(0,0,0,0.4);
+        opacity: 0;
+        visibility: hidden;
+        font-size: 12px;
+    }
+  	
+    #se-cookies-message.se-cookies-message-open {
+        opacity: 1;
+        visibility: visible;
+		background: {{ section.settings.cc_popup_background_color }};
+        animation-duration:0.8s;
+        -webkit-animation-duration:0.8s;
+        -moz-animation-duration:0.8s;
+        -o-animation-duration:0.8s;
+        -webkit-animation-name:slideUp;
+        animation-name:slideUp;
+      	max-width: 480px;
+    	padding: 20px;
+    	margin-left: 20px;
+    	margin-bottom: 20px;
+    	text-align: left;
+
+    }
+  	.se-cookies-links {
+  		text-align: right;
+    }
+  	.se-cookies-links a {
+  		font-size:14px;
+      	color: {{ section.settings.cc_popup_text_color }};
+    }
+  	.se-cookies-links a:hover {
+      	color: {{ section.settings.cc_popup_text_hover_color }};
+    }
+  	#se-accept-cookies-checkbox {
+  		padding-left: 15px;
+      	text-decoration: underline;
+    }
+  	.se-cookies-text {
+    	font-size: 15px;
+    	line-height: 1.5;
+    	margin-bottom: 15px;
+      	color: {{ section.settings.cc_popup_text_color }}
+	}
+  	@media only screen and (max-width: 749px) {
+    	#se-cookies-message.se-cookies-message-open {
+    		max-width: 90% !important;
+        }
+    }
+    @media screen and (min-width: 768px) {
+        #se-cookies-message {
+            padding: 15px 30px;
+            font-size: 17px;
+        }
+        .se-cookies-text {
+            padding-right: 0;
+        }
+    }
+</style>
+{% if section.settings.cc_enable == true %}
+<div id="se-cookies-message-container">
+    <div id="se-cookies-message">
+        <div class="se-cookies-text">
+            {{ section.settings.cc_popup_text }}
+        </div>
+      	<div class="se-cookies-links">
+          	{% if section.settings.cc_popup_privacy_url != blank %}
+          	  <a href="{{ section.settings.cc_popup_privacy_url }}">{{more_info}}</a>
+            {% endif %}
+        	<a href="javascript:SE_CloseCookiesWindow();" id="se-accept-cookies-checkbox">{{button_text}}</a>
+      	</div>
+      </div>
+</div>
+
+<script>
+  function SE_setCookie (name, value, days) {
+    var expires = "";
+    if (days) {
+      var date = new Date();
+      date.setTime(date.getTime() + (days*24*60*60*1000));
+      expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+  }
+
+  function SE_getCookie (name) {
+    var pair = document.cookie.match(new RegExp(name + '=([^;]+)'));
+    return !!pair ? pair[1] : null;
+  }
+
+  var cookiesName = 'cookies_accepted';
+
+  function SE_CheckCookies () {
+    if(!SE_getCookie(cookiesName)) {
+      var cookies_message = document.getElementById("se-cookies-message");
+      cookies_message.className += " se-cookies-message-open";
+    }
+  }
+
+  function SE_CloseCookiesWindow () {
+    SE_setCookie(cookiesName, true, 9999);
+    document.getElementById("se-cookies-message-container").removeChild(document.getElementById("se-cookies-message"));
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    SE_CheckCookies();
+  });
+</script>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Cookie consent",
+	"tag": "section",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "cc_enable",
+        "label": "Enable",
+        "default": false
+      },
+	  {
+        "type": "header",
+        "content": "Content"
+      },
+	  {
+	  	"type" : "textarea",
+		"id" : "cc_popup_text",
+		"label" : "Cookie consent text",
+		"default" : "We use cookies to ensure that we give you the best experience on our website. If you continue we'll assume that you are understand this."
+	  },
+	  {
+	  	"type" : "url",
+		"id" : "cc_popup_privacy_url",
+		"label" : "Privacy Policy URL"
+	  },
+      {
+        "type": "header",
+        "content": "Palette"
+      },
+      {
+        "type": "color",
+        "id": "cc_popup_background_color",
+        "label": "Popup background color",
+		"default" : "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "cc_popup_text_color",
+        "label": "Popup text color",
+		"default" : "#000000"
+      },
+      {
+        "type": "color",
+        "id": "cc_popup_text_hover_color",
+        "label": "Popup text hover color",
+		"default" : "#000000"
+      }
+    ],
+    "locales": {
+      "en": {
+        "message": "This website uses cookies to target ads, and ensure you get the best experience on our website.",
+        "dismiss": "Got it!",
+        "link": "Learn more",
+        "allow": "Allow cookies",
+        "deny": "Decline",
+        "policy": "Cookiepolicy"
+      }
+    }
+  }
+{% endschema %}

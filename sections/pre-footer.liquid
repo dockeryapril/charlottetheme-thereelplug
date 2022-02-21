@@ -1,0 +1,280 @@
+{% if section.settings.enable_pre_footer %}
+   <div id="shopify-section-pre-footer" class="shopify-section index-section">
+      <div class="first-footer page-width">
+        <div class="container">
+           <!-- col -->
+           <div class="grid-item">
+              <div class="f-footer-border">
+              {% if section.settings.pre_footer_column1_image != blank %}
+                  <img src="{{ section.settings.pre_footer_column1_image | img_url: 'original' }}" class="footer-image no-border ratina-img lazyautosizes lazyloaded">
+            {% else %}
+                  <img src="{{ 'placeholder-img.png' | asset_url }}" alt="Image of footer-image" class="footer-image no-border ratina-img lazyautosizes lazyloaded">
+            {% endif %}
+                <div class="f-footer-text">
+                  {% if section.settings.pre_footer_column1_header != blank %}
+                  <h3 class="f-footer-text__title">{{ section.settings.pre_footer_column1_header }}</h3>  
+                  {% else %}
+                    <h3 class="f-footer-text__title">Column Header</h3>
+                  {% endif %}
+                  {% if section.settings.pre_footer_column1_desc != blank %}
+                  <p class="f-footer-text__description">{{ section.settings.pre_footer_column1_desc }}</p> 
+                  {% endif %}
+                  {% if section.settings.pre_footer_column1_url != blank %}
+                    <p>
+                      <span class="f-footer-text__link f-footer-text__link--text">
+                        <a href="{{ section.settings.pre_footer_column1_url }}">See Details</a>
+                      </span>
+                    </p>
+                  {% else %}
+                    <!--<p class="f-footer-text__description">This is the description for the column</p>-->
+                  {% endif %}
+                  
+                </div>
+                  <!-- f-footer-text -->
+               </div>
+            </div>
+            <!-- col -->
+           <div class="grid-item">
+              <div class="f-footer-border">
+              {% if section.settings.pre_footer_column2_image != blank %}
+                  <img src="{{ section.settings.pre_footer_column2_image | img_url: 'original' }}" class="footer-image no-border ratina-img lazyautosizes lazyloaded">
+            {% else %}
+                  <img src="{{ 'placeholder-img.png' | asset_url }}" alt="Image of footer-image" class="footer-image no-border ratina-img lazyautosizes lazyloaded"> 
+                {% endif %}
+                <div class="f-footer-text">
+                  {% if section.settings.pre_footer_column2_header != blank %}
+                  <h3 class="f-footer-text__title">{{ section.settings.pre_footer_column2_header }}</h3>  
+                  {% else %}
+                    <h3 class="f-footer-text__title">Column Header</h3>
+                  {% endif %}
+                  {% if section.settings.pre_footer_column2_desc != blank %}
+                  <p class="f-footer-text__description">{{ section.settings.pre_footer_column2_desc }}</p> 
+                  {% endif %}
+                  {% if section.settings.pre_footer_column2_url != blank %}
+                    <p>
+                      <span class="f-footer-text__link f-footer-text__link--text">
+                        <a href="{{ section.settings.pre_footer_column2_url }}">See Details</a>
+                      </span>
+                    </p>
+                  {% else %}
+                    <!--<p class="f-footer-text__description">This is the description for the column</p>-->
+                  {% endif %}
+                  
+                </div>
+                  <!-- f-footer-text -->
+               </div>
+            </div>
+            <!-- col -->
+           <div class="grid-item">
+              <div class="f-footer-border">
+              {% if section.settings.pre_footer_column3_image != blank %}
+                  <img src="{{ section.settings.pre_footer_column3_image | img_url: 'original' }}" class="footer-image no-border ratina-img lazyautosizes lazyloaded">
+            {% else %}
+                  <img src="{{ 'placeholder-img.png' | asset_url }}" alt="Image of footer-image" class="footer-image no-border ratina-img lazyautosizes lazyloaded">
+                {% endif %}
+                <div class="f-footer-text">
+                  {% if section.settings.pre_footer_column3_header != blank %}
+                  <h3 class="f-footer-text__title">{{ section.settings.pre_footer_column3_header }}</h3>  
+                  {% else %}
+                    <h3 class="f-footer-text__title">Column Header</h3>
+                  {% endif %}
+                  {% if section.settings.pre_footer_column3_desc != blank %}
+                  <p class="f-footer-text__description">{{ section.settings.pre_footer_column3_desc }}</p> 
+                  {% endif %}
+                  {% if section.settings.pre_footer_column3_url != blank %}
+                    <p>
+                      <span class="f-footer-text__link f-footer-text__link--text">
+                        <a href="{{ section.settings.pre_footer_column3_url }}">See Details</a>
+                      </span>
+                    </p>
+                  {% else %}
+                    <!--<p class="f-footer-text__description">This is the description for the column</p>-->
+                  {% endif %}
+                  
+                </div>
+                  <!-- f-footer-text -->
+               </div>
+            </div>
+            <!-- col -->
+           <div class="grid-item">
+              <div class="f-footer-border">
+              {% if section.settings.pre_footer_column4_image != blank %}
+                  <img src="{{ section.settings.pre_footer_column4_image | img_url: 'original' }}" class="footer-image no-border ratina-img lazyautosizes lazyloaded">
+            {% else %}
+                  <img src="{{ 'placeholder-img.png' | asset_url }}" alt="Image of footer-image" class="footer-image no-border ratina-img lazyautosizes lazyloaded">
+                {% endif %}
+                <div class="f-footer-text">
+                  {% if section.settings.pre_footer_column4_header != blank %}
+                  <h3 class="f-footer-text__title">{{ section.settings.pre_footer_column4_header }}</h3>  
+                  {% else %}
+                    <h3 class="f-footer-text__title">Column Header</h3>
+                  {% endif %}
+                  {% if section.settings.pre_footer_column4_desc != blank %}
+                  <p class="f-footer-text__description">{{ section.settings.pre_footer_column4_desc }}</p> 
+                  {% endif %}
+                  {% if section.settings.pre_footer_column4_url != blank %}
+                    <p>
+                      <span class="f-footer-text__link f-footer-text__link--text">
+                        <a href="{{ section.settings.pre_footer_column4_url }}">See Details</a>
+                      </span>
+                    </p>
+                  {% else %}
+                    <!--<p class="f-footer-text__description">This is the description for the column</p>-->
+                  {% endif %}
+                  
+                </div>
+                  <!-- f-footer-text -->
+               </div>
+            </div>
+            <!-- col -->
+         </div>
+         <!-- container -->
+      </div>
+      <!-- first-footer -->
+   </div>
+   <style>
+    div#shopify-section-pre-footer {
+        background-color: {{section.settings.color_prefooter_bg}};
+      	padding: 5px 0px;
+      }
+      h3.f-footer-text__title{
+        color:{{section.settings.color_prefooter_text}};
+        font-weight:600;
+      }
+      p.f-footer-text__description{
+        color:{{section.settings.color_prefooter_text}};
+      }
+      span.f-footer-text__link a{
+        text-decoration:none;
+        color:{{section.settings.color_prefooter_text_link}};
+      }
+   </style>  
+{% endif %}
+
+{% schema %}
+	{
+    "name": "Pre-Footer",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_pre_footer",
+        "label": "Enable Pre Footer Columns",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Column 1"
+      },
+      {
+        "type": "image_picker",
+        "id": "pre_footer_column1_image",
+        "label": "Image"
+      },
+      {
+        "type": "text",
+        "id": "pre_footer_column1_header",
+        "label": "Header"
+      },
+      {
+        "type": "textarea",
+        "id": "pre_footer_column1_desc",
+        "label": "Description"
+      },
+      {
+        "type": "url",
+        "id": "pre_footer_column1_url",
+        "label": "Link"
+      },
+      {
+        "type": "header",
+        "content": "Column 2"
+      },
+      {
+        "type": "image_picker",
+        "id": "pre_footer_column2_image",
+        "label": "Image"
+      },
+      {
+        "type": "text",
+        "id": "pre_footer_column2_header",
+        "label": "Header"
+      },
+      {
+        "type": "textarea",
+        "id": "pre_footer_column2_desc",
+        "label": "Description"
+      },
+      {
+        "type": "url",
+        "id": "pre_footer_column2_url",
+        "label": "Link"
+      },
+      {
+        "type": "header",
+        "content": "Column 3"
+      },
+      {
+        "type": "image_picker",
+        "id": "pre_footer_column3_image",
+        "label": "Image"
+      },
+      {
+        "type": "text",
+        "id": "pre_footer_column3_header",
+        "label": "Header"
+      },
+      {
+        "type": "textarea",
+        "id": "pre_footer_column3_desc",
+        "label": "Description"
+      },
+      {
+        "type": "url",
+        "id": "pre_footer_column3_url",
+        "label": "Link"
+      },
+      {
+        "type": "header",
+        "content": "Column 4"
+      },
+      {
+        "type": "image_picker",
+        "id": "pre_footer_column4_image",
+        "label": "Image"
+      },
+      {
+        "type": "text",
+        "id": "pre_footer_column4_header",
+        "label": "Header"
+      },
+      {
+        "type": "textarea",
+        "id": "pre_footer_column4_desc",
+        "label": "Description"
+      },
+      {
+        "type": "url",
+        "id": "pre_footer_column4_url",
+        "label": "Link"
+      },
+      {
+        "type": "color",
+        "id": "color_prefooter_bg",
+        "label": "Background",
+        "default": "#daf1fd"
+      },
+      {
+        "type": "color",
+        "id": "color_prefooter_text",
+        "label": "Text",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "color_prefooter_text_link",
+        "label": "Text Link",
+        "default": "#000000"
+      }
+    ]
+  }
+{% endschema %}

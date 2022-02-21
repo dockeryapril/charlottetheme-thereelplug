@@ -1,0 +1,135 @@
+{% if section.settings.show_recently_viewed_products %}
+
+<div class="page-width">
+
+<script src="//ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js" defer="defer"></script>
+
+<div class="product-recommendations__inner">
+  
+      {%- assign max_height = 600 -%}
+      {%- assign grid_item_width = 'small--one-half medium-up--one-quarter' -%}
+	  {%- liquid
+        if use_variant
+          assign target = product.selected_or_first_available_variant
+        else
+          assign target = product
+        endif 
+
+        assign compare_at_price = target.compare_at_price
+        assign price = target.price | default: 1999
+        assign available = target.available | default: false
+        assign money_price = price | money
+        if settings.currency_code_enabled
+          assign money_price = price | money_with_currency
+        endif
+
+        if target == product and product.price_varies
+          assign money_price = 'products.product.price.from_price_html' | t: price: money_price
+        endif
+      -%}
+  
+
+<div class="recently-viewed-products" data-product-id="{{product.id}}" data-section-type="recently-viewed-products" data-limit="{{limit}}" style="display:none;"> 
+  {% if section.settings.title != blank %}
+    <div class="section-header">
+            <h2 class="title">{{ section.settings.title | escape }}</h2>
+  </div>
+  {% endif %}  
+  <div id="recently-viewed-products" class="grid"></div>
+</div>
+</div>
+
+
+{% raw %}
+<script id="recently-viewed-product-template" type="text/x-jquery-tmpl">
+<div class="grid__item {% endraw %}{{ grid_item_width }}{% raw %}">
+<div id="product-${handle}" class="product">
+ <a href="${url}">      
+        <div class="product-grid-item__image">
+          <img src="${Shopify.Products.resizeImage(featured_image, "medium")}" />
+        </div>
+      	
+	  <div class="product-card-info">
+      	<div class="h3 grid-view-item__title product-card__title" aria-hidden="true">${title}</div>
+        <div class="price  price--on-sale ">
+       <dl>
+    <div class="price__sale">
+      <dt class="price__compare">
+        <span class="visually-hidden visually-hidden--inline">Regular price</span>
+      </dt>
+      <dd class="price__compare">
+        List Price:
+        <s class="price-item price-item--regular">
+            ${Shopify.formatMoney(compare_at_price, window.myprice)}
+        </s>
+      </dd>
+      <dt>
+        <span class="visually-hidden visually-hidden--inline">Sale price</span>
+      </dt>
+      <dd>
+        Price: 
+        <span class="price-item price-item--sale">
+           ${Shopify.formatMoney(price, window.myprice)}
+        </span>
+      </dd>
+    </div>
+    
+    <span class="price-item save-price">You save: <span class="price-item price-item--save"> ${Math.ceil(compare_at_price - price)} </span> <span class="price-item price-item--percent">(${Math.ceil(((compare_at_price - price) * 100.0) / compare_at_price)}%) </span></span>
+        
+    <small class="unit-price caption hidden">
+      <dt class="visually-hidden">Unit price</dt>
+      <dd>
+        <span></span>
+        <span aria-hidden="true">/</span>
+        <span class="visually-hidden">&nbsp;per&nbsp;</span>
+        <span>
+        </span>
+      </dd>
+    </small>
+  </dl></div>       
+	  </div>
+    </a>
+</div>
+</div>
+</script>
+{% endraw %}
+  
+<script>
+  {% if settings.currency_code_enabled %}  
+  	window.myprice = "{{ shop.money_with_currency_format }}";
+  {% else %}
+  	window.myprice = "{{ shop.money }}";
+  {% endif%}
+</script>
+  
+<script src="{{ 'recently-viewed.js' | asset_url }}" defer="defer"></script>
+  
+</div>
+
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Recently Viewed Products",
+    "settings": [
+	  {
+		"type": "checkbox",
+		"id": "show_recently_viewed_products",
+		"label": "Show recently viewed products",
+		"default": true
+	  },
+	  {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Recently Viewed Products"
+      }
+    ],
+	"presets": [
+    	{
+      		"name": "Recently Viewed Products",
+      		"category": "section"
+    	}
+  	]
+  }
+{% endschema %}
